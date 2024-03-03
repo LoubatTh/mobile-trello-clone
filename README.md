@@ -1,4 +1,4 @@
-<a href="https://github.com/EpitechMscProPromo2026/T-DEV-600-TLS_2/actions"><img src="https://github.com/EpitechMscProPromo2026/T-DEV-600-TLS_2/workflows/test-my-app/badge.svg" alt="Build Status"></a>
+<a href="https://github.com/EpitechMscProPromo2026/T-DEV-600-TLS_2/actions"><img src="https://github.com/EpitechMscProPromo2026/T-DEV-600-TLS_2/workflows/tests/badge.svg" alt="Build Status"></a>
 
 # T-DEV-600-TLS_2
 
