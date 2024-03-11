@@ -7,7 +7,7 @@ import 'mock/mock_dio.mocks.dart';
 
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
+  await dotenv.load(fileName: '.env.test');
 
   late ApiService apiService;
   late MockDio mockDio;
