@@ -17,8 +17,14 @@ class ApiService {
         ));
   }
 
-  Future<Response> get(String path) async {
+  Future<Response> get(String path,
+      [Map<String, dynamic>? queryParameters]) async {
     try {
+      if (queryParameters != null && queryParameters.isNotEmpty) {
+        return await dio.get(path, queryParameters: {
+          ...queryParameters,
+        });
+      }
       return await dio.get(path);
     } catch (e) {
       rethrow;
