@@ -20,28 +20,35 @@ class ApiService {
   Future<Response> get(String path,
       [Map<String, dynamic>? queryParameters]) async {
     try {
-      if (queryParameters != null && queryParameters.isNotEmpty) {
-        return await dio.get(path, queryParameters: {
-          ...queryParameters,
-        });
-      }
-      return await dio.get(path);
+      isParam(queryParameters) ? queryParameters = {} : queryParameters;
+
+      return await dio.get(path, queryParameters: {...?queryParameters});
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<Response> post(String path, {dynamic data}) async {
+  Future<Response> post(String path,
+      [Map<String, dynamic>? queryParameters, dynamic data]) async {
     try {
-      return await dio.post(path, data: data);
+      isParam(queryParameters) ? queryParameters = {} : queryParameters;
+      isData(data) ? data = {} : data;
+
+      return await dio.post(path,
+          queryParameters: {...?queryParameters}, data: data);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<Response> put(String path, {dynamic data}) async {
+  Future<Response> put(String path,
+      [Map<String, dynamic>? queryParameters, dynamic data]) async {
     try {
-      return await dio.put(path, data: data);
+      isParam(queryParameters) ? queryParameters = {} : queryParameters;
+      isData(data) ? data = {} : data;
+
+      return await dio.put(path,
+          queryParameters: {...?queryParameters}, data: data);
     } catch (e) {
       rethrow;
     }
@@ -55,3 +62,7 @@ class ApiService {
     }
   }
 }
+
+bool isParam(Map<String, dynamic>? param) => param == null || param.isEmpty;
+
+bool isData(dynamic data) => data != null && data.isNotEmpty;
