@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const BoardPage()),
+                MaterialPageRoute(builder: (context) => const WorkspacePage()),
               );
             },
             child: const Text('Go to Workspace Page'),
