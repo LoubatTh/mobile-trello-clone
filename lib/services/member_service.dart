@@ -4,7 +4,6 @@ import 'package:app/services/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-
 class MemberService {
   ApiService apiService;
 
@@ -12,14 +11,16 @@ class MemberService {
       : apiService = apiService ?? ApiService();
 
   Future<List<WorkspaceModel>> getMemberOrganizations(String id) async {
+    print(id);
     var response = await apiService.get("/members/$id/organizations");
     List<dynamic> decodedJson = response.data;
+    print(decodedJson);
     return decodedJson
         .map<WorkspaceModel>(
             (json) => WorkspaceModel.fromJson(json as Map<String, dynamic>))
         .toList();
   }
-  
+
   Future<Member> getMember() async {
     Response response = await ApiService().get('/', {
       'fields': 'avatarUrl,username,idOrganizations,idBoards',
@@ -30,4 +31,5 @@ class MemberService {
     }
 
     return Member.fromJson(response.data);
+  }
 }

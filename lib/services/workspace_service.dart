@@ -10,7 +10,7 @@ class WorkspaceService {
   // POST /organizations
   Future<String> createOrganization(WorkspaceModel workspaceModel) async {
     Map<String, dynamic> postData = workspaceModel.toJson();
-    var response = await apiService.post("/organizations", data: postData);
+    var response = await apiService.post("/organizations", postData);
     return response.data['id'];
   }
 
@@ -23,7 +23,7 @@ class WorkspaceService {
   // PUT /organizations/{id}
   Future<String> updateOrganization(
       String id, Map<String, dynamic> updateData) async {
-    var response = await apiService.put("/organizations/$id", data: updateData);
+    var response = await apiService.put("/organizations/$id",  updateData);
     return response.data['id'];
   }
 
@@ -47,14 +47,14 @@ class WorkspaceService {
   // PUT /organizations/{id}/members
   Future<void> updateOrganizationMembers(
       String id, Map<String, dynamic> updateData) async {
-    await apiService.put("/organizations/$id/members", data: updateData);
+    await apiService.put("/organizations/$id/members", updateData);
   }
 
   // PUT /organizations/{id}/members/{idMember}
   Future<dynamic> updateOrganizationMember(
       String id, String idMember, Map<String, dynamic> updateData) async {
     var response = await apiService.put("/organizations/$id/members/$idMember",
-        data: updateData);
+        updateData);
     return response.data;
   }
 

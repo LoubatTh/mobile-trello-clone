@@ -29,26 +29,22 @@ class ApiService {
   }
 
   Future<Response> post(String path,
-      [Map<String, dynamic>? queryParameters, dynamic data]) async {
+      [Map<String, dynamic>? queryParameters]) async {
     try {
       isParam(queryParameters) ? queryParameters = {} : queryParameters;
-      isData(data) ? data = {} : data;
 
-      return await dio.post(path,
-          queryParameters: {...?queryParameters}, data: data);
+      return await dio.post(path, queryParameters: {...?queryParameters});
     } catch (e) {
       rethrow;
     }
   }
 
   Future<Response> put(String path,
-      [Map<String, dynamic>? queryParameters, dynamic data]) async {
+      [Map<String, dynamic>? queryParameters]) async {
     try {
       isParam(queryParameters) ? queryParameters = {} : queryParameters;
-      isData(data) ? data = {} : data;
 
-      return await dio.put(path,
-          queryParameters: {...?queryParameters}, data: data);
+      return await dio.put(path, queryParameters: {...?queryParameters});
     } catch (e) {
       rethrow;
     }

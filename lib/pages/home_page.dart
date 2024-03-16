@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const BoardPage()),
               );
             },
-            child: const Text('Go to Workspace Page'),
+            child: const Text('Go to Board Page'),
           ),
         ],
       ),
