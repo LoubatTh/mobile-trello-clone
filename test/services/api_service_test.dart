@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dio/dio.dart';
 import 'package:app/services/api_service.dart';
-import 'mock/mock_dio.mocks.dart';
+import '../mock/mock_dio.mocks.dart';
 
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
