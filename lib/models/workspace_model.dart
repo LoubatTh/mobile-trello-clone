@@ -1,37 +1,50 @@
 class WorkspaceModel {
-  String id;
+  String? id;
   String displayName;
   String desc;
-  String name;
-  String website;
+  List<String>? idBoards;
+  String? idMemberCreator;
 
+  // Constructor for general use, makes most fields required.
   WorkspaceModel({
-    required this.id,
+    this.id,
     required this.displayName,
     required this.desc,
-    required this.name,
-    required this.website,
+    this.idBoards,
+    this.idMemberCreator,
   });
 
-  // Convert a Map (or JSON) into a WorkspaceModel instance
-  factory WorkspaceModel.fromJson(Map<String, dynamic> json) {
+  // Factory method for creation - expects only displayName, name, and desc.
+  factory WorkspaceModel.forCreation(
+      {required String displayName, required String desc}) {
     return WorkspaceModel(
-      id: json['id'],
-      displayName: json['displayName'],
-      desc: json['desc'],
-      name: json['name'],
-      website: json['website'],
+      displayName: displayName,
+      desc: desc,
     );
   }
 
-  // Convert the WorkspaceModel instance into a Map
+  // Factory method for retrieving a workspace - expects all fields.
+  factory WorkspaceModel.fromJson(Map<String, dynamic> json) {
+    // Ensure 'idBoards' is properly cast to List<String>
+    List<String> idBoards = [];
+    if (json['idBoards'] != null) {
+      idBoards = List<String>.from(json['idBoards']);
+    }
+
+    return WorkspaceModel(
+      id: json['id'] as String?,
+      displayName: json['displayName'] as String,
+      desc: json['desc'] as String,
+      idBoards: idBoards,
+      idMemberCreator: json['idMemberCreator'] as String?,
+    );
+  }
+
+  // Convert the WorkspaceModel instance into a Map. Adjust as needed for API.
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'displayName': displayName,
       'desc': desc,
-      'name': name,
-      'website': website,
     };
   }
 }

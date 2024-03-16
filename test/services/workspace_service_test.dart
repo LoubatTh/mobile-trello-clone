@@ -3,7 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:dio/dio.dart';
 import 'package:app/models/workspace_model.dart';
 import 'package:app/services/workspace_service.dart';
-import 'mock/mock_api_service.mocks.dart';
+import '../mock/mock_api_service.mocks.dart';
 
 void main() {
   group('WorkspaceService Tests', () {
@@ -18,8 +18,8 @@ void main() {
           id: "1",
           displayName: "Test Workspace",
           desc: "A test workspace",
-          name: "Workspace1",
-          website: "https://example.com");
+          idBoards: ["Workspace1", "Workspace2"],
+          idMemberCreator: "https://example.com");
     });
 
     // Test for createOrganization method
@@ -28,7 +28,7 @@ void main() {
         () async {
       const String expectedId = "2";
       Map<String, dynamic> postData = workspaceModel.toJson();
-
+      
       when(mockApiService.post('/organizations', data: anyNamed('data')))
           .thenAnswer((_) async => Response(
                 data: {'id': expectedId},
