@@ -11,5 +11,5 @@ jobs:
         run: cp .env.test assets/.env
       - name: Run tests
         run: flutter test
-      - name: Clean up .env file
+      - name: Clean up assets/.env file
         run: rm .env
