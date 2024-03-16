@@ -17,7 +17,7 @@ class WorkspacePageState extends State<WorkspacePage> {
   late Future<List<WorkspaceModel>> organizationsFuture;
   final WorkspaceService workspaceService = WorkspaceService();
   final MemberService memberService = MemberService();
-  final userId = 'matteodegano1';
+  final userId = 'thomasloubat2';
 
   @override
   void initState() {

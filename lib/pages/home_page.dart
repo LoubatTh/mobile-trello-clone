@@ -1,3 +1,4 @@
+import 'package:app/pages/board_page.dart';
 import 'package:app/pages/workspace_page.dart';
 import 'package:flutter/material.dart';
 
@@ -10,16 +11,28 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home Page'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const WorkspacePage()),
-            );
-          },
-          child: const Text('Go to Workspace Page'),
-        ),
+      body: Column(
+        children: <Widget>[
+          const Text('Welcome to the Home Page'),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WorkspacePage()),
+              );
+            },
+            child: const Text('Go to Workspace Page'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const BoardPage()),
+              );
+            },
+            child: const Text('Go to Board Page'),
+          ),
+        ],
       ),
     );
   }

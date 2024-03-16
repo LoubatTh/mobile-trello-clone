@@ -12,9 +12,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      title: 'TrellTech',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.grey,
+          brightness: Brightness.dark,
+          backgroundColor: Colors.grey[900],
+        ),
+      ),
+      home: const HomePage(),
     );
   }
 }
