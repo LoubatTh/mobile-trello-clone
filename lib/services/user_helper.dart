@@ -88,6 +88,13 @@ class DatabaseHelper {
     return member.first['token'];
   }
 
+  /// Check si la base de données est remplie
+  Future<bool> isDatabaseFilled() async {
+    Database db = await database;
+    List<Map<String, dynamic>> member = await db.query('user', limit: 1);
+    return member.isNotEmpty;
+  }
+
   /// Supprime le membre de la base de données.
   Future<int> deleteDatabase() async {
     Database db = await database;
