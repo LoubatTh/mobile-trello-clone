@@ -4,6 +4,12 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: subosito/flutter-action@v1
-    - run: flutter test
+      - uses: actions/checkout@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+      - name: Prepare .env file
+        run: cp .env.test assets/.env
+      - name: Run tests
+        run: flutter test
+      - name: Clean up .env file
+        run: rm assets/.env
