@@ -6,7 +6,7 @@ import 'package:app/pages/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
+  await dotenv.load(fileName: "assets/.env");
   runApp(MyApp());
 }
 
@@ -38,11 +38,104 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('TrellTech'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+              child: Text(
+                'Étapes à suivre :',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: RichText(
+                text: const TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Étape 1 :',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                    TextSpan(
+                      text: ' Appuyez sur le bouton ci-dessous ',
+                    ),
+                    TextSpan(
+                      text: '"Extract your Trello token"',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: ' pour obtenir votre jeton Trello.',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: RichText(
+                text: const TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Étape 2 :',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                    TextSpan(
+                      text: ' Suivre les étapes de connexion et accepter les autorisations.',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: RichText(
+                text: const TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Étape 3 :',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                    TextSpan(
+                      text: ' Une fois arrivé sur la page avec le token, copiez-le et collez-le dans le champ ci-dessous.',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: RichText(
+                text: const TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Étape 4 :',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                    TextSpan(
+                      text: ' Il ne vous reste plus qu\'à appuyer sur le bouton ',
+                    ),
+                    TextSpan(
+                      text: '"Send Token"',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: ' pour valider votre jeton.',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () => _launchInWebView(),
               child: const Text('Extract your Trello token'),
@@ -52,20 +145,44 @@ class MyHomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _textController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your token here',
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextField(
+                      controller: _textController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your token here',
+                      ),
                     ),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    await _sendToken(_textController.text);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
+                    bool databaseFilled = await _sendToken(_textController.text);
+                    if (!databaseFilled) {
+                      showDialog(
+                        // ignore: use_build_context_synchronously
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Erreur'),
+                            content: const Text('Le token n\'a pas pu être envoyé. Veuillez réessayer.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    }
                   },
                   child: const Text('Send Token'),
                 ),
@@ -77,7 +194,7 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  Future<void> _sendToken(String token) async {
+  Future<bool> _sendToken(String token) async {
     final dbHelper = DatabaseHelper.instance;
 
     await dbHelper.deleteDatabase();
@@ -85,6 +202,8 @@ class MyHomePage extends StatelessWidget {
     print('print database : ');
     await dbHelper.printDatabaseColumns();
     await dbHelper.printDatabase();
+
+    return await dbHelper.isDatabaseFilled();
   }
 }
 
