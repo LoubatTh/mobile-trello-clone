@@ -2,9 +2,9 @@ import 'package:app/services/board_service.dart';
 import 'package:flutter/material.dart';
 
 class DeleteBoardButton extends StatelessWidget {
+  DeleteBoardButton({super.key, required this.boardId});
   final String boardId;
-
-  const DeleteBoardButton({super.key, required this.boardId});
+  final BoardService boardService = BoardService();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class DeleteBoardButton extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () =>
-                            {deleteBoard(boardId), Navigator.of(context).pop()},
+                            {boardService.deleteBoard(boardId), Navigator.of(context).pop()},
                         child: const Text('Delete'),
                       ),
                     ],

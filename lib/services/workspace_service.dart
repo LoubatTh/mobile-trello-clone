@@ -7,7 +7,17 @@ class WorkspaceService {
   WorkspaceService({ApiService? apiService})
       : apiService = apiService ?? ApiService();
 
-  // POST /organizations
+  // GET all the member's organizations
+  Future<List<WorkspaceModel>> getMemberOrganizations() async {
+    var response = await apiService.get('/members/me/organizations', {'fields': 'displayName,desc,idMemberCreator,idBoards'});
+    List<dynamic> decodedJson = response.data;
+    return decodedJson
+        .map<WorkspaceModel>(
+            (json) => WorkspaceModel.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
+
+  // POST /a new organization
   Future<String> createOrganization(WorkspaceModel workspaceModel) async {
     Map<String, dynamic> postData = workspaceModel.toJson();
     var response = await apiService.post("/organizations", postData);
@@ -15,15 +25,15 @@ class WorkspaceService {
   }
 
   // GET /organizations/{id}
-  Future<String> getOrganization(String id) async {
-    var response = await apiService.get("/organizations/$id");
-    return response.data['id'];
+  Future<WorkspaceModel> getOrganization(String id) async {
+    var response = await apiService.get("/organizations/$id", {'fields': 'displayName,desc,idMemberCreator,idBoards'});
+    return response.data;
   }
 
   // PUT /organizations/{id}
   Future<String> updateOrganization(
       String id, Map<String, dynamic> updateData) async {
-    var response = await apiService.put("/organizations/$id",  updateData);
+    var response = await apiService.put("/organizations/$id", updateData);
     return response.data['id'];
   }
 
@@ -53,8 +63,8 @@ class WorkspaceService {
   // PUT /organizations/{id}/members/{idMember}
   Future<dynamic> updateOrganizationMember(
       String id, String idMember, Map<String, dynamic> updateData) async {
-    var response = await apiService.put("/organizations/$id/members/$idMember",
-        updateData);
+    var response = await apiService.put(
+        "/organizations/$id/members/$idMember", updateData);
     return response.data;
   }
 

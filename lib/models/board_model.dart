@@ -1,25 +1,30 @@
 class ShortBoard {
-  String id;
+  String? id;
   String name;
+  String? desc;
+  String? idMemberCreator;
   String? idOrganization;
 
   ShortBoard({
-    required this.id,
+    this.id,
     required this.name,
-    required this.idOrganization,
+    this.desc,
+    this.idMemberCreator,
+    this.idOrganization,
   });
 
   factory ShortBoard.fromJson(Map<String, dynamic> json) {
     return ShortBoard(
       id: json['id'],
       name: json['name'],
+      desc: json['desc'],
+      idMemberCreator: json['idMemberCreator'],
       idOrganization: json['idOrganization'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'idOrganization': idOrganization,
     };

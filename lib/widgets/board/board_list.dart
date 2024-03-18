@@ -1,3 +1,4 @@
+import 'package:app/models/board_model.dart';
 import 'package:app/services/board_service.dart';
 import 'package:app/widgets/board/delete_board_button.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,13 @@ class BoardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final boards = getAllBoards();
+    late Future<List<ShortBoard>> boardsFuture;
+    final BoardService boardservice = BoardService();
+    boardsFuture = boardservice.getMemberBoards();
+
 
     return FutureBuilder(
-        future: boards,
+        future: boardsFuture,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
