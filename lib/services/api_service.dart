@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:app/services/user_helper.dart';
+// import 'package:app/services/user_helper.dart';
 
 class ApiService {
   late Dio dio;
-  final dbHelper = DatabaseHelper.instance;
+  // final dbHelper = DatabaseHelper.instance;
   String? apiUrl = dotenv.env['API_URL'];
 
   ApiService({Dio? dioClient}) {
@@ -13,21 +13,22 @@ class ApiService {
 
   Future<void> _initializeDio() async {
     apiUrl = dotenv.env['API_URL'];
-    final token = await dbHelper.getToken();
+    // final token = await dbHelper.getToken();
 
     dio = Dio(BaseOptions(
       baseUrl: apiUrl ?? "",
       queryParameters: {
         'key': dotenv.env['API_KEY'],
-        'token': token,
+        'token': dotenv.env['API_TOKEN'],
       },
     ));
 
     print(dio);
   }
 
-  Future<Response> get(String path, {Map<String, dynamic>? data}) async {
-    await dbHelper.printDatabase();
+  Future<Response> get(String path,
+      [Map<String, dynamic>? queryParameters]) async {
+    // await dbHelper.printDatabase();
     try {
       isParam(data) ? data = {} : data;
 

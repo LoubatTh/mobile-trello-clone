@@ -18,6 +18,7 @@ class CreateBoardButtonState extends State<CreateBoardButton> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController textController = TextEditingController();
+    final BoardService boardservice = BoardService();
 
     return FloatingActionButton(
         backgroundColor: Colors.white10,
@@ -43,6 +44,7 @@ class CreateBoardButtonState extends State<CreateBoardButton> {
                         TextButton(
                           onPressed: () {
                             createBoard(widget.boardService, textController.text);
+                            boardservice.createBoard(textController.text);
                             Navigator.of(context).pop();
                           },
                           child: const Text('Create'),

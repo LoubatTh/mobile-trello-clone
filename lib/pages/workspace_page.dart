@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:app/models/board_model.dart';
+import 'package:app/services/board_service.dart';
 import 'package:app/models/workspace_model.dart';
 import 'package:app/pages/create_workspace_page.dart';
-import 'package:app/pages/workspace_options_page.dart';
 import 'package:app/services/workspace_service.dart';
-import 'package:app/widgets/workspace_sidepanel_widget.dart';
-import 'package:app/services/member_service.dart';
-import 'package:app/services/user_helper.dart';
+import 'package:app/pages/workspace_options_page.dart';
 
 class WorkspacePage extends StatefulWidget {
   const WorkspacePage({Key? key}) : super(key: key);
@@ -14,99 +13,74 @@ class WorkspacePage extends StatefulWidget {
   _WorkspacePageState createState() => _WorkspacePageState();
 }
 
-class _WorkspacePageState extends State<WorkspacePage> {
-  late Future<List<WorkspaceModel>> organizationsFuture = Future.value([]);
+class WorkspacePageState extends State<WorkspacePage> {
+  late Future<List<WorkspaceModel>> organizationsFuture;
+  late Future<List<ShortBoard>> boardsFuture;
   final WorkspaceService workspaceService = WorkspaceService();
-  final MemberService memberService = MemberService();
+  final BoardService boardService = BoardService();
 
   @override
   void initState() {
     super.initState();
-    loadWorkspaces();
+    loadWorkspacesAndBoards();
   }
 
-  void loadWorkspaces() {
-    getUserNameAsyncUser().then((userId) {
-      setState(() {
-        organizationsFuture = memberService.getMemberOrganizations(userId!);
-      });
-    });
-  }
-
-  Future<String?> getUserNameAsyncUser() async {
-    return await DatabaseHelper.instance.getUsername();
-  }
-
-  void onSelectWorkspace(String workspaceId) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WorkspaceOptionsPage(
-          workspaceId: workspaceId,
-          workspaceService: workspaceService,
-        ),
-      ),
-    );
-
-    if (result == true) {
-      loadWorkspaces();
-    }
+  void loadWorkspacesAndBoards() {
+    organizationsFuture = workspaceService.getMemberOrganizations();
+    boardsFuture = boardService.getMemberBoards();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Workspaces'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CreateWorkspacePage()),
-              );
-
-              if (result == true) {
-                loadWorkspaces();
-              }
-            },
-          ),
-        ],
-      ),
-      drawer: FutureBuilder<List<WorkspaceModel>>(
-        future: organizationsFuture,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Drawer();
-          return WorkspaceSidePanel(
-            workspaces: snapshot.data!,
-            onSelectWorkspace: onSelectWorkspace,
-          );
-        },
+        title: const Text('Home'),
       ),
       body: FutureBuilder<List<WorkspaceModel>>(
         future: organizationsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox(
-              width: 60,
-              height: 60,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                var workspace = snapshot.data![index];
-                return Card(
-                  child: ListTile(
-                    title: Text(workspace.displayName),
-                    subtitle:
-                        Text('Boards: ${workspace.idBoards?.length ?? 0}'),
-                  ),
+        builder: (context, workspaceSnapshot) {
+          if (workspaceSnapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (workspaceSnapshot.hasError) {
+            return Text('Error: ${workspaceSnapshot.error}');
+          } else if (workspaceSnapshot.hasData) {
+            return FutureBuilder<List<ShortBoard>>(
+              future: boardsFuture,
+              builder: (context, boardsSnapshot) {
+                if (!boardsSnapshot.hasData) return const CircularProgressIndicator();
+
+                Set<String> displayedBoardIds = {};
+                List<Widget> workspaceWidgets = workspaceSnapshot.data!.map((workspace) {
+                  List<ShortBoard> workspaceBoards = boardsSnapshot.data!.where((board) {
+                    return board.idOrganization == workspace.id && displayedBoardIds.add(board.id!);
+                  }).toList();
+
+                  return Column(
+                    children: [
+                      buildWorkspaceCard(workspace),
+                      ...workspaceBoards.map((board) => ListTile(
+                            leading: const Icon(Icons.dashboard),
+                            title: Text(board.name),
+                          )),
+                    ],
+                  );
+                }).toList();
+
+                List<ShortBoard> guestWorkspaceBoards = boardsSnapshot.data!.where((board) => !displayedBoardIds.contains(board.id)).toList();
+                if (guestWorkspaceBoards.isNotEmpty) {
+                  workspaceWidgets.add(Column(
+                    children: [
+                      const ListTile(title: Text('Guest Workspace')),
+                      ...guestWorkspaceBoards.map((board) => ListTile(
+                            leading: const Icon(Icons.dashboard),
+                            title: Text(board.name),
+                          )),
+                    ],
+                  ));
+                }
+
+                return ListView(
+                  children: workspaceWidgets,
                 );
               },
             );
@@ -114,6 +88,39 @@ class _WorkspacePageState extends State<WorkspacePage> {
             return const Text('No workspaces found');
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateWorkspacePage()),
+          );
+          if (result == true) {
+            loadWorkspacesAndBoards();
+          }
+        },
+        backgroundColor: Theme.of(context).primaryColor,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget buildWorkspaceCard(WorkspaceModel workspace) {
+    return Card(
+      margin: const EdgeInsets.all(8),
+      child: ListTile(
+        title: Text(workspace.displayName),
+        trailing: IconButton(
+          icon: const Icon(Icons.more_vert),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => WorkspaceOptionsPage(
+                workspaceId: workspace.id!,
+                workspaceService: workspaceService,
+              ),
+            ));
+          },
+        ),
       ),
     );
   }

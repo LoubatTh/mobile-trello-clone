@@ -8,43 +8,55 @@ class BoardService {
   BoardService({ApiService? apiService})
       : apiService = apiService ?? ApiService();
 
-  Future<List<ShortBoardModel>> getAllBoards() async {
-    Response response = await apiService.get('/members/me/boards',
-        data: {'fields': 'name,desc,idOrganization'});
+class BoardService {
+  ApiService apiService;
 
-    return response.data.map<ShortBoardModel>((e) {
-      return ShortBoardModel.fromJson(e);
-    }).toList();
-  }
+  BoardService({ApiService? apiService})
+      : apiService = apiService ?? ApiService();
 
-  Future<List<ShortBoardModel>> getAllWorkspaceBoards(String id) async {
-    Response response = await apiService.get('/organization/$id/boards',
-        data: {'fields': 'name,desc,idOrganization'});
-
-    return response.data.map<ShortBoardModel>((e) {
-      return ShortBoardModel.fromJson(e);
-    }).toList();
-  }
-
-  Future<BoardModel> getBoard(String id) async {
-    Response response = await apiService.get('/members/me/boards/$id');
-    return response.data;
-  }
-
-  Future<String> createBoard(String name, {String? idOrganization}) async {
-    Map<String, dynamic> data = {'name': name};
-    if (idOrganization != null) data['idOrganization'] = idOrganization;
-    Response response = await apiService.post('/boards', data: data);
-    return response.data['id'];
-  }
-
-  Future<String> renameBoard(String id, String name) async {
+  // GET all the member's boards
+  Future<List<ShortBoard>> getMemberBoards() async {
     Response response =
-        await apiService.put('/boards/$id', data: {'name': name});
-    return response.data;
+        await ApiService().get('/members/me/boards', {'fields': 'name,desc,idMemberCreator,idOrganization'});
+    List<dynamic> decodedJson = response.data;
+     return decodedJson
+        .map<ShortBoard>(
+            (json) => ShortBoard.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
-  Future<void> deleteBoard(String id) async {
-    await apiService.delete('/boards/$id');
+  Future<List<ShortBoard>> getAllWorkspaceBoards(String id) async {
+    Response response;
+    response = await ApiService().get('/organization/$id/boards');
+
+    final boards = <ShortBoard>[];
+
+    for (var board in response.data) {
+      boards.add(ShortBoard.fromJson(board));
+    }
+
+    return boards;
+  }
+
+  Future<Board> getBoard(String id) async {
+    Response response = await ApiService().get('/members/me/boards/$id');
+
+    return Board.fromJson(response.data);
+  }
+
+  void createBoard(String name, {String? idOrganization}) async {
+    Response response = await ApiService().post('/boards', {'name': name});
+
+    if (kDebugMode) {
+      print("createBoard(): $response");
+    }
+  }
+
+  void renameBoard(String id, String name) async {
+    await ApiService().put('/boards/$id', {'name': name});
+  }
+
+  void deleteBoard(String id) async {
+    await ApiService().delete('/boards/$id');
   }
 }

@@ -54,7 +54,7 @@ class CreateWorkspacePageState extends State<CreateWorkspacePage> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      _createWorkspace();
+                      createWorkspace();
                     }
                   },
                   child: const Text('Create Workspace'),
@@ -67,7 +67,7 @@ class CreateWorkspacePageState extends State<CreateWorkspacePage> {
     );
   }
 
-  Future<void> _createWorkspace() async {
+  Future<void> createWorkspace() async {
     WorkspaceModel newWorkspace = WorkspaceModel.forCreation(
       displayName: name,
       desc: _desc,
