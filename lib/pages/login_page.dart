@@ -26,15 +26,15 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.grey[900],
         ),
       ),
-      home: MyHomePage(),
+      home: MyLoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyLoginPage extends StatelessWidget {
   final TextEditingController _textController = TextEditingController();
 
-  MyHomePage({Key? key}) : super(key: key);
+  MyLoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +88,15 @@ class MyHomePage extends StatelessWidget {
                       style: TextStyle(decoration: TextDecoration.underline),
                     ),
                     TextSpan(
-                      text: ' Suivre les étapes de connexion et accepter les autorisations.',
+                      text:
+                          ' Suivre les étapes de connexion et accepter les autorisations.',
                     ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 10),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: RichText(
                 text: const TextSpan(
@@ -105,7 +106,8 @@ class MyHomePage extends StatelessWidget {
                       style: TextStyle(decoration: TextDecoration.underline),
                     ),
                     TextSpan(
-                      text: ' Une fois arrivé sur la page avec le token, copiez-le et collez-le dans le champ ci-dessous.',
+                      text:
+                          ' Une fois arrivé sur la page avec le token, copiez-le et collez-le dans le champ ci-dessous.',
                     ),
                   ],
                 ),
@@ -122,7 +124,8 @@ class MyHomePage extends StatelessWidget {
                       style: TextStyle(decoration: TextDecoration.underline),
                     ),
                     TextSpan(
-                      text: ' Il ne vous reste plus qu\'à appuyer sur le bouton ',
+                      text:
+                          ' Il ne vous reste plus qu\'à appuyer sur le bouton ',
                     ),
                     TextSpan(
                       text: '"Send Token"',
@@ -157,7 +160,8 @@ class MyHomePage extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    bool databaseFilled = await _sendToken(_textController.text);
+                    bool databaseFilled =
+                        await _sendToken(_textController.text);
                     if (!databaseFilled) {
                       showDialog(
                         // ignore: use_build_context_synchronously
@@ -165,7 +169,8 @@ class MyHomePage extends StatelessWidget {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Erreur'),
-                            content: const Text('Le token n\'a pas pu être envoyé. Veuillez réessayer.'),
+                            content: const Text(
+                                'Le token n\'a pas pu être envoyé. Veuillez réessayer.'),
                             actions: [
                               TextButton(
                                 onPressed: () {

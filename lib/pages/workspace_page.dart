@@ -5,19 +5,19 @@ import 'package:app/pages/workspace_options_page.dart';
 import 'package:app/services/workspace_service.dart';
 import 'package:app/widgets/workspace_sidepanel_widget.dart';
 import 'package:app/services/member_service.dart';
+import 'package:app/services/user_helper.dart';
 
 class WorkspacePage extends StatefulWidget {
-  const WorkspacePage({super.key});
+  const WorkspacePage({Key? key}) : super(key: key);
 
   @override
-  WorkspacePageState createState() => WorkspacePageState();
+  _WorkspacePageState createState() => _WorkspacePageState();
 }
 
-class WorkspacePageState extends State<WorkspacePage> {
-  late Future<List<WorkspaceModel>> organizationsFuture;
+class _WorkspacePageState extends State<WorkspacePage> {
+  late Future<List<WorkspaceModel>> organizationsFuture = Future.value([]);
   final WorkspaceService workspaceService = WorkspaceService();
   final MemberService memberService = MemberService();
-  final userId = 'thomasloubat2';
 
   @override
   void initState() {
@@ -26,9 +26,15 @@ class WorkspacePageState extends State<WorkspacePage> {
   }
 
   void loadWorkspaces() {
-    setState(() {
-      organizationsFuture = memberService.getMemberOrganizations(userId);
+    getUserNameAsyncUser().then((userId) {
+      setState(() {
+        organizationsFuture = memberService.getMemberOrganizations(userId!);
+      });
     });
+  }
+
+  Future<String?> getUserNameAsyncUser() async {
+    return await DatabaseHelper.instance.getUsername();
   }
 
   void onSelectWorkspace(String workspaceId) async {

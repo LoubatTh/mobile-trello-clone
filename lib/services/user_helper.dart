@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DatabaseHelper {
   static Database? _database;
-  final client = Dio();
+  late final client = Dio();
   final apikey = dotenv.env['API_KEY'];
   final apiurl = dotenv.env['API_URL'];
 
@@ -17,6 +19,7 @@ class DatabaseHelper {
     if (_database != null) return _database!;
 
     sqfliteFfiInit();
+
     String path = join(await getDatabasesPath(), 'user_db.db');
 
     _database = await openDatabase(path, version: 1,
@@ -86,6 +89,16 @@ class DatabaseHelper {
       return null;
     }
     return member.first['token'];
+  }
+
+  //Récupère le username de l'utilisateur
+  Future<String?> getUsername() async {
+    Database db = await database;
+    List<Map<String, dynamic>> member = await db.query('user', limit: 1);
+    if (member.isEmpty) {
+      return null;
+    }
+    return member.first['username'];
   }
 
   /// Check si la base de données est remplie

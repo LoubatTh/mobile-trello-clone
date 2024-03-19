@@ -6,7 +6,7 @@ void main() async {
   await dotenv.load(fileName: "assets/.env");
   runApp(
     MaterialApp(
-      home: MyHomePage(),
+      home: MyLoginPage(),
     ),
   );
 }
