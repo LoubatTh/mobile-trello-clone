@@ -1,52 +1,44 @@
 import 'package:app/models/board_model.dart';
 import 'package:app/services/api_service.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
-Future<List<ShortBoard>> getAllBoards() async {
-  Response response =
-      await ApiService().get('/members/me/boards', {'fields': 'name,desc'});
+class BoardService {
+  ApiService apiService;
 
-  final boards = <ShortBoard>[];
+  BoardService({ApiService? apiService})
+      : apiService = apiService ?? ApiService();
 
-  for (var board in response.data) {
-    boards.add(ShortBoard.fromJson(board));
+  Future<List<ShortBoardModel>> getAllBoards() async {
+    Response response = await apiService
+        .get('/members/me/boards', data: {'fields': 'name,desc'});
+    return response.data;
   }
 
-  return boards;
-}
-
-Future<List<ShortBoard>> getAllWorkspaceBoards(String id) async {
-  Response response;
-  response = await ApiService().get('/organization/$id/boards');
-
-  final boards = <ShortBoard>[];
-
-  for (var board in response.data) {
-    boards.add(ShortBoard.fromJson(board));
+  Future<List<ShortBoardModel>> getAllWorkspaceBoards(String id) async {
+    Response response = await apiService.get('/organization/$id/boards');
+    return response.data;
   }
 
-  return boards;
-}
-
-Future<Board> getBoard(String id) async {
-  Response response = await ApiService().get('/members/me/boards/$id');
-
-  return Board.fromJson(response.data);
-}
-
-void createBoard(String name, {String? idOrganization}) async {
-  Response response = await ApiService().post('/boards', {'name': name});
-
-  if (kDebugMode) {
-    print("createBoard(): $response");
+  Future<BoardModel> getBoard(String id) async {
+    Response response = await apiService.get('/members/me/boards/$id');
+    return response.data;
   }
-}
 
-void renameBoard(String id, String name) async {
-  await ApiService().put('/boards/$id', {'name': name});
-}
+  Future<String> createBoard(String name, {String? idOrganization}) async {
+    Map<String, dynamic> data = {'name': name};
+    if (idOrganization != null) data['idOrganization'] = idOrganization;
+    Response response = await apiService.post('/boards', data: {'name': name});
+    return response.data['id'];
+  }
 
-void deleteBoard(String id) async {
-  await ApiService().delete('/boards/$id');
+  Future<String> renameBoard(String id, String name) async {
+    Response response =
+        await apiService.put('/boards/$id', data: {'name': name});
+    return response.data;
+  }
+
+  Future<String> deleteBoard(String id) async {
+    Response response = await apiService.delete('/boards/$id');
+    return response.data['id'];
+  }
 }

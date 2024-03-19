@@ -11,10 +11,8 @@ class MemberService {
       : apiService = apiService ?? ApiService();
 
   Future<List<WorkspaceModel>> getMemberOrganizations(String id) async {
-    print(id);
     var response = await apiService.get("/members/$id/organizations");
     List<dynamic> decodedJson = response.data;
-    print(decodedJson);
     return decodedJson
         .map<WorkspaceModel>(
             (json) => WorkspaceModel.fromJson(json as Map<String, dynamic>))
@@ -22,7 +20,7 @@ class MemberService {
   }
 
   Future<Member> getMember() async {
-    Response response = await ApiService().get('/', {
+    Response response = await ApiService().get('/', data: {
       'fields': 'avatarUrl,username,idOrganizations,idBoards',
     });
 
