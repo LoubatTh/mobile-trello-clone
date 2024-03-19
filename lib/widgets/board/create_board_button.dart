@@ -1,5 +1,4 @@
 import 'package:app/services/board_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CreateBoardButton extends StatelessWidget {
@@ -42,16 +41,5 @@ class CreateBoardButton extends StatelessWidget {
                   })
             },
         child: const Icon(Icons.add, color: Colors.white70, size: 30));
-  }
-
-  Future<void> createBoard(String name) async {
-    try {
-      final BoardService boardService = BoardService();
-      boardService.createBoard(name);
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error: $e');
-      }
-    }
   }
 }
