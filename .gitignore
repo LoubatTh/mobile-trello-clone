@@ -9,7 +9,10 @@
 .history
 .env
 .svn/
+.env
 migrate_working_dir/
+.lock
+
 
 # IntelliJ related
 *.iml
