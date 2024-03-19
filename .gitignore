@@ -12,6 +12,7 @@
 .env
 migrate_working_dir/
 .lock
+pubspec.lock
 
 
 # IntelliJ related
