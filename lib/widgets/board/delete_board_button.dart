@@ -1,4 +1,5 @@
 import 'package:app/services/board_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DeleteBoardButton extends StatelessWidget {
@@ -35,4 +36,16 @@ class DeleteBoardButton extends StatelessWidget {
             },
         icon: const Icon(Icons.delete, color: Colors.white70, size: 20));
   }
+  
+  Future<void> deleteBoard(String id) async {
+    try {
+      final BoardService boardService = BoardService();
+      boardService.deleteBoard(id);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error: $e');
+      }
+    }
+  }
 }
+

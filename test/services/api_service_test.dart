@@ -27,10 +27,15 @@ void main() async {
         statusCode: 200,
       );
 
-      when(mockDio.get(any, options: anyNamed('options')))
+      when(mockDio.get(any,
+              data: anyNamed('data'),
+              options: anyNamed('options'),
+              queryParameters: anyNamed('queryParameters'),
+              cancelToken: anyNamed('cancelToken'),
+              onReceiveProgress: anyNamed('onReceiveProgress')))
           .thenAnswer((_) async => mockResponse);
 
-      final result = await apiService.get(path);
+      final result = await apiService.get(path, data: {});
 
       expect(result.data, equals('Mock Get Response'));
       expect(result.statusCode, 200);
@@ -45,10 +50,15 @@ void main() async {
         statusCode: 404,
       );
 
-      when(mockDio.get(any, options: anyNamed('options')))
+      when(mockDio.get(any,
+              data: anyNamed('data'),
+              options: anyNamed('options'),
+              queryParameters: anyNamed('queryParameters'),
+              cancelToken: anyNamed('cancelToken'),
+              onReceiveProgress: anyNamed('onReceiveProgress')))
           .thenAnswer((_) async => mockResponse);
 
-      final result = await apiService.get(path);
+      final result = await apiService.get(path, data: {});
 
       expect(result.data, equals('Mock Get Response'));
       expect(result.statusCode, 404);
@@ -57,7 +67,12 @@ void main() async {
     // test for get method throws an exception
     test('get method throws an exception', () async {
       const path = 'test_endpoint';
-      when(mockDio.get(any, options: anyNamed('options')))
+      when(mockDio.get(any,
+              data: anyNamed('data'),
+              options: anyNamed('options'),
+              queryParameters: anyNamed('queryParameters'),
+              cancelToken: anyNamed('cancelToken'),
+              onReceiveProgress: anyNamed('onReceiveProgress')))
           .thenThrow(Exception('Test Exception'));
 
       expect(() async => await apiService.get(path), throwsException);

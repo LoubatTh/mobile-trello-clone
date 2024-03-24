@@ -25,34 +25,34 @@ class ApiService {
   }
 
   Future<Response> get(String path,
-      [Map<String, dynamic>? queryParameters]) async {
+      {Map<String, dynamic>? data}) async {
     await dbHelper.printDatabase();
     try {
-      isParam(queryParameters) ? queryParameters = {} : queryParameters;
+      isParam(data) ? data = {} : data;
 
-      return await dio.get(path, queryParameters: {...?queryParameters});
+      return await dio.get(path, queryParameters: {...?data});
     } catch (e) {
       rethrow;
     }
   }
 
   Future<Response> post(String path,
-      [Map<String, dynamic>? queryParameters]) async {
+      {Map<String, dynamic>? data}) async {
     try {
-      isParam(queryParameters) ? queryParameters = {} : queryParameters;
+      isParam(data) ? data = {} : data;
 
-      return await dio.post(path, queryParameters: {...?queryParameters});
+      return await dio.post(path, data: {...?data});
     } catch (e) {
       rethrow;
     }
   }
 
   Future<Response> put(String path,
-      [Map<String, dynamic>? queryParameters]) async {
+      {Map<String, dynamic>? data}) async {
     try {
-      isParam(queryParameters) ? queryParameters = {} : queryParameters;
+      isParam(data) ? data = {} : data;
 
-      return await dio.put(path, queryParameters: {...?queryParameters});
+      return await dio.put(path, data: {...?data});
     } catch (e) {
       rethrow;
     }
