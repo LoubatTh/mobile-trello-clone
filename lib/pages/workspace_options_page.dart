@@ -60,7 +60,11 @@ class WorkspaceOptionsPageState extends State<WorkspaceOptionsPage> {
               future: membersFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return const SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
                 } else if (snapshot.hasError || snapshot.data == null) {
                   return Text('Error: ${snapshot.error ?? "Unknown error"}');
                 }

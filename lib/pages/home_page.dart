@@ -1,4 +1,4 @@
-import 'package:app/pages/board_page.dart';
+import 'package:app/pages/board_list_page.dart';
 import 'package:app/pages/workspace_page.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const BoardPage()),
+                MaterialPageRoute(builder: (context) => const BoardListPage()),
               );
             },
             child: const Text('Go to Board Page'),
