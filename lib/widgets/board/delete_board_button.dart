@@ -36,7 +36,7 @@ class DeleteBoardButton extends StatelessWidget {
             },
         icon: const Icon(Icons.delete, color: Colors.white70, size: 20));
   }
-  
+
   Future<void> deleteBoard(String id) async {
     try {
       final BoardService boardService = BoardService();
@@ -48,4 +48,3 @@ class DeleteBoardButton extends StatelessWidget {
     }
   }
 }
-
