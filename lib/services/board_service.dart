@@ -4,59 +4,75 @@ import 'package:dio/dio.dart';
 
 class BoardService {
   ApiService apiService;
-
-  BoardService({ApiService? apiService})
-      : apiService = apiService ?? ApiService();
-
-class BoardService {
-  ApiService apiService;
-
   BoardService({ApiService? apiService})
       : apiService = apiService ?? ApiService();
 
   // GET all the member's boards
   Future<List<ShortBoard>> getMemberBoards() async {
-    Response response =
-        await ApiService().get('/members/me/boards', {'fields': 'name,desc,idMemberCreator,idOrganization'});
-    List<dynamic> decodedJson = response.data;
-     return decodedJson
-        .map<ShortBoard>(
-            (json) => ShortBoard.fromJson(json as Map<String, dynamic>))
-        .toList();
+    try {
+      Response response = await ApiService().get('/members/me/boards',
+          {'fields': 'name,desc,idMemberCreator,idOrganization'});
+      List<dynamic> decodedJson = response.data;
+      return decodedJson
+          .map<ShortBoard>(
+              (json) => ShortBoard.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<List<ShortBoard>> getAllWorkspaceBoards(String id) async {
-    Response response;
-    response = await ApiService().get('/organization/$id/boards');
+    try {
+      Response response;
+      response = await ApiService().get('/organization/$id/boards');
 
-    final boards = <ShortBoard>[];
+      final boards = <ShortBoard>[];
 
-    for (var board in response.data) {
-      boards.add(ShortBoard.fromJson(board));
+      for (var board in response.data) {
+        boards.add(ShortBoard.fromJson(board));
+      }
+
+      return boards;
+    } catch (e) {
+      rethrow;
     }
-
-    return boards;
   }
 
   Future<Board> getBoard(String id) async {
-    Response response = await ApiService().get('/members/me/boards/$id');
+    try {
+      Response response = await ApiService().get('/members/me/boards/$id');
 
-    return Board.fromJson(response.data);
+      return Board.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  void createBoard(String name, {String? idOrganization}) async {
-    Response response = await ApiService().post('/boards', {'name': name});
-
-    if (kDebugMode) {
-      print("createBoard(): $response");
+  // Create a new board with or without a template
+  Future<void> createBoard(NewBoard newBoard) async {
+    try {
+      Map<String, dynamic> postData = newBoard.toJson();
+      await apiService.post('/boards/', postData);
+    } catch (e) {
+      print(e);
+      rethrow;
     }
   }
 
   void renameBoard(String id, String name) async {
-    await ApiService().put('/boards/$id', {'name': name});
+    try {
+      await ApiService().put('/boards/$id', {'name': name});
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void deleteBoard(String id) async {
-    await ApiService().delete('/boards/$id');
+    try {
+      await ApiService().delete('/boards/$id');
+    } catch (e) {
+      rethrow;
+    }
   }
 }

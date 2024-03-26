@@ -34,7 +34,36 @@ class ShortBoard {
   }
 }
 
-class BoardModel {
+class NewBoard {
+  String name;
+  String idOrganization;
+  String? desc;
+  String? idBoardSource;
+
+  NewBoard({
+    required this.name,
+    required this.idOrganization,
+    this.desc,
+    this.idBoardSource,
+  });
+
+  Map<String, dynamic> toJson() {
+    if (idBoardSource == null && desc == null) {
+      return {
+        'name': name,
+        'idOrganization': idOrganization,
+      };
+    }
+    return {
+      'name': name,
+      'idOrganization': idOrganization,
+      'desc': desc,
+      'idBoardSource': idBoardSource,
+    };
+  }
+}
+
+class Board {
   String id;
   String name;
   String desc;

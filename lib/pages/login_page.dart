@@ -7,11 +7,11 @@ import 'package:app/pages/home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/.env");
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +176,7 @@ class MyLoginPage extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('OK'),
+                                child: const Text('OK'),
                               ),
                             ],
                           );
@@ -184,8 +184,9 @@ class MyLoginPage extends StatelessWidget {
                       );
                     } else {
                       Navigator.push(
+                        // ignore: use_build_context_synchronously
                         context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
+                        MaterialPageRoute(builder: (context) => const HomePage()),
                       );
                     }
                   },
@@ -204,7 +205,6 @@ class MyLoginPage extends StatelessWidget {
 
     await dbHelper.deleteDatabase();
     await dbHelper.fillDatabaseWithToken(token);
-    print('print database : ');
     await dbHelper.printDatabaseColumns();
     await dbHelper.printDatabase();
 
@@ -215,9 +215,9 @@ class MyLoginPage extends StatelessWidget {
 Future<void> _launchInWebView() async {
   final apiurl = dotenv.env['API_URL'];
   final apikey = dotenv.env['API_KEY'];
-  final _url = Uri.parse(
+  final url = Uri.parse(
       '$apiurl/authorize?expiration=never&scope=read,write,account&response_type=token&key=$apikey');
-  if (!await launchUrl(_url, mode: LaunchMode.inAppBrowserView)) {
-    throw Exception('Could not launch $_url');
+  if (!await launchUrl(url, mode: LaunchMode.inAppBrowserView)) {
+    throw Exception('Could not launch $url');
   }
 }
