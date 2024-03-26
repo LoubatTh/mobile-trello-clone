@@ -9,14 +9,21 @@ class BoardService {
       : apiService = apiService ?? ApiService();
 
   Future<List<ShortBoardModel>> getAllBoards() async {
-    Response response = await apiService
-        .get('/members/me/boards', data: {'fields': 'name,desc'});
-    return response.data;
+    Response response = await apiService.get('/members/me/boards',
+        data: {'fields': 'name,desc,idOrganization'});
+
+    return response.data.map<ShortBoardModel>((e) {
+      return ShortBoardModel.fromJson(e);
+    }).toList();
   }
 
   Future<List<ShortBoardModel>> getAllWorkspaceBoards(String id) async {
-    Response response = await apiService.get('/organization/$id/boards');
-    return response.data;
+    Response response = await apiService.get('/organization/$id/boards',
+        data: {'fields': 'name,desc,idOrganization'});
+
+    return response.data.map<ShortBoardModel>((e) {
+      return ShortBoardModel.fromJson(e);
+    }).toList();
   }
 
   Future<BoardModel> getBoard(String id) async {
