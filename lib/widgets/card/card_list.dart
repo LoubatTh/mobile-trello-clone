@@ -104,6 +104,8 @@ Widget _buildMemberAvatars(List<Member>? members, Cover? cover, List<Label>? lab
     bannerColor = getColor(cover.color!);
   }
 
+  final double labelsContainerWidth = 250.0; // Taille fixe pour le container des labels
+
   return Container(
     width: double.infinity,
     decoration: BoxDecoration(
@@ -115,15 +117,17 @@ Widget _buildMemberAvatars(List<Member>? members, Cover? cover, List<Label>? lab
     ),
     padding: const EdgeInsets.all(8.0),
     child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
+        Container(
+          width: labelsContainerWidth,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
                 if (labels != null && labels.isNotEmpty)
-                  ...labels.map((label) {
-                    return Container(
+                  for (var label in labels)
+                    Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                       margin: const EdgeInsets.only(right: 4.0),
                       decoration: BoxDecoration(
@@ -134,26 +138,30 @@ Widget _buildMemberAvatars(List<Member>? members, Cover? cover, List<Label>? lab
                         label.name,
                         style: TextStyle(color: Colors.white),
                       ),
-                    );
-                  }).toList(),
+                    ),
               ],
             ),
           ),
         ),
-        if (members != null && members.isNotEmpty)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              for (var member in members)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage("${member.avatarUrl}/60.png"),
-                    radius: 16,
-                  ),
-                ),
-            ],
+        SizedBox(width: 8.0), // Espacement entre le container des labels et le container des avatars
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                if (members != null && members.isNotEmpty)
+                  for (var member in members)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage("${member.avatarUrl}/60.png"),
+                        radius: 16.0,
+                      ),
+                    ),
+              ],
+            ),
           ),
+        ),
       ],
     ),
   );
