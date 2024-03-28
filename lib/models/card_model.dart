@@ -6,7 +6,9 @@ class ShortCard {
   String idBoard;
   List<String>? idMembers = [];
   List<Member>? members = [];
-  List<String> checklists = [];
+  List<String>? idChecklists = [];
+  List<Checklist>? checklists = [];
+  Cover? cover;
 
   ShortCard({
     required this.id,
@@ -16,7 +18,9 @@ class ShortCard {
     required this.idBoard,
     this.idMembers,
     this.members,
-    required this.checklists,
+    this.idChecklists,
+    this.checklists,
+    this.cover, 
   });
 
   factory ShortCard.fromJson(Map<String, dynamic> json) {
@@ -30,8 +34,12 @@ class ShortCard {
       members: json['members'] != null
           ? List<Member>.from(json['members'].map((x) => Member.fromJson(x)))
           : [],
-      checklists: List<String>.from(json['idChecklists']),
-    );
+      idChecklists: List<String>.from(json['idChecklists']),
+      checklists: json['checklists'] != null
+          ? List<Checklist>.from(json['checklists'].map((x) => Checklist.fromJson(x)))
+          : [],
+      cover: json['cover'] != null ? Cover.fromJson(json['cover']) : null,
+        );
   }
 
   Map<String, dynamic> toJson() {
@@ -43,7 +51,9 @@ class ShortCard {
       'idBoard': idBoard,
       'idMembers': idMembers,
       'members': members,
+      'idChecklists': idChecklists,
       'checklists': checklists,
+      'cover': cover?.toJson(), 
     };
   }
 
@@ -56,8 +66,113 @@ class ShortCard {
       'members': members,
     };
   }
+
+  void addChecklist(Checklist checklist) {
+    checklists!.add(checklist);
+  }
+
+  Map<String, dynamic> getChecklist() {
+    return {
+      'checklists': checklists,
+    };
+  }
 }
 
+class Cover {
+  String? color;
+  String size;
+  String brightness;
+
+  Cover({
+    this.color,
+    required this.size,
+    required this.brightness,
+  });
+
+  factory Cover.fromJson(Map<String, dynamic> json) {
+    return Cover(
+      color: json['color'],
+      size: json['size'],
+      brightness: json['brightness'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'color': color,
+      'size': size,
+      'brightness': brightness,
+    };
+  }
+}
+
+class Checklist {
+  String id;
+  String name;
+  String idCard;
+  List<Item> items;
+
+  Checklist({
+    required this.id,
+    required this.name,
+    required this.idCard,
+    required this.items,
+  });
+
+  factory Checklist.fromJson(Map<String, dynamic> json) {
+    return Checklist(
+      id: json['id'],
+      name: json['name'],
+      idCard: json['idCard'],
+      items: List<Item>.from(json['checkItems'].map((x) => Item.fromJson(x))),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'idCard': idCard,
+      'items': items.map((item) => item.toJson()).toList(),
+    };
+  }
+
+  int getItemsChecked() {
+    return items.where((item) => item.state == 'complete').length;
+  }
+}
+
+class Item {
+  String id;
+  String name;
+  String idChecklist;
+  String state;
+
+  Item({
+    required this.id,
+    required this.name,
+    required this.idChecklist,
+    required this.state,
+  });
+
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return Item(
+      id: json['id'],
+      name: json['name'],
+      idChecklist: json['idChecklist'],
+      state: json['state'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'idChecklist': idChecklist,
+      'state': state,
+    };
+  }
+}
 class Member {
   String id;
   String fullName;

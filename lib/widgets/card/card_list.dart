@@ -24,47 +24,78 @@ class CardList extends StatelessWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
-                for (var card in cardList) ...[
+                for (var card in cardList)
                   material.Card(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          leading: const Icon(Icons.space_dashboard_rounded,
-                              size: 20),
-                          title: Text(card.name,
-                              style: const TextStyle(fontSize: 14)),
+                          leading: const Icon(Icons.space_dashboard_rounded, size: 20),
+                          title: Text(card.name, style: const TextStyle(fontSize: 14)),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(card.desc),
-                        ),
+                        if (card.desc.isNotEmpty) // Vérifie si la description est non vide
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(card.desc),
+                          ),
+                        _buildChecklistInfo(card),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  const SizedBox(width: 16),
-                                  Text('Checklists: ${card.checklists.length}'),
-                                ],
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end, // Alignement à droite
+                                  children: [
+                                    _buildMemberAvatars(card.members),
+                                  ],
+                                ),
                               ),
-                              _buildMemberAvatars(card.members),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                ],
               ],
             ),
           );
         }
       },
     );
+  }
+
+  Widget _buildChecklistInfo(ShortCard card) {
+    if (card.idChecklists != null && card.idChecklists!.length > 1) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            const Icon(Icons.check_box, color: Colors.green), // Logo de la case à cocher
+            const SizedBox(width: 8),
+            Text('${card.idChecklists!.length} Checklists'),
+          ],
+        ),
+      );
+    } else if (card.idChecklists != null && card.idChecklists!.length == 1) {
+      // Si une seule checklist est présente
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            Icon(Icons.check_box, color: Colors.green), // Logo de la case à cocher
+            const SizedBox(width: 8),
+            Text('${card.checklists!.first.name} : ${card.checklists!.first.getItemsChecked()}/${card.checklists!.first.items.length}' ),
+          ],
+        ),
+      );
+    } else {
+      // Si aucune checklist n'est présente
+      return const SizedBox.shrink();
+    }
   }
 
   Widget _buildMemberAvatars(List<Member>? members) {
