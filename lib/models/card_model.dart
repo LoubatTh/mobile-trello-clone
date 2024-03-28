@@ -8,6 +8,8 @@ class ShortCard {
   List<Member>? members = [];
   List<String>? idChecklists = [];
   List<Checklist>? checklists = [];
+  List<String>? idLabels = [];
+  List<Label>? labels = [];
   Cover? cover;
 
   ShortCard({
@@ -20,6 +22,8 @@ class ShortCard {
     this.members,
     this.idChecklists,
     this.checklists,
+    this.idLabels,
+    this.labels,
     this.cover, 
   });
 
@@ -38,6 +42,10 @@ class ShortCard {
       checklists: json['checklists'] != null
           ? List<Checklist>.from(json['checklists'].map((x) => Checklist.fromJson(x)))
           : [],
+      idLabels: List<String>.from(json['idLabels']),
+      labels: json['labels'] != null
+          ? List<Label>.from(json['labels'].map((x) => Label.fromJson(x)))
+          : [],
       cover: json['cover'] != null ? Cover.fromJson(json['cover']) : null,
         );
   }
@@ -53,6 +61,8 @@ class ShortCard {
       'members': members,
       'idChecklists': idChecklists,
       'checklists': checklists,
+      'idLabels': idLabels,
+      'labels': labels,
       'cover': cover?.toJson(), 
     };
   }
@@ -78,6 +88,33 @@ class ShortCard {
   }
 }
 
+class Label {
+  String id;
+  String name;
+  String color;
+
+  Label({
+    required this.id,
+    required this.name,
+    required this.color,
+  });
+
+  factory Label.fromJson(Map<String, dynamic> json) {
+    return Label(
+      id: json['id'],
+      name: json['name'],
+      color: json['color'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'color': color,
+    };
+  }
+}
 class Cover {
   String? color;
   String size;

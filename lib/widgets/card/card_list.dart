@@ -25,44 +25,45 @@ class CardList extends StatelessWidget {
             child: Column(
               children: [
                 for (var card in cardList)
-                  material.Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ListTile(
-                          leading: const Icon(Icons.space_dashboard_rounded, size: 20),
-                          title: Text(card.name, style: const TextStyle(fontSize: 14)),
-                        ),
-                        if (card.desc.isNotEmpty) // Vérifie si la description est non vide
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text(card.desc),
-                          ),
-                        _buildChecklistInfo(card),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end, // Alignement à droite
-                                  children: [
-                                    _buildMemberAvatars(card.members),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  buildCardWidget(card),
               ],
             ),
           );
         }
       },
+    );
+  }
+
+  Widget buildCardWidget(ShortCard card) {
+    if (card.cover!.size == 'full') {
+      Color? bannerColor = getColor(card.cover!.color!);
+      return material.Card(
+        color: bannerColor ?? Colors.transparent,
+        child: buildCardContent(card),
+      );
+    } else {
+      return material.Card(
+        child: buildCardContent(card),
+      );
+    }
+  }
+
+  Widget buildCardContent(ShortCard card) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          leading: const Icon(Icons.space_dashboard_rounded, size: 20),
+          title: Text(card.name, style: const TextStyle(fontSize: 14)),
+        ),
+        if (card.desc.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(card.desc),
+          ),
+        _buildChecklistInfo(card),
+        _buildMemberAvatars(card.members, card.cover, card.labels),
+        ],
     );
   }
 
@@ -73,45 +74,115 @@ class CardList extends StatelessWidget {
         child: Row(
           children: [
             const SizedBox(width: 16),
-            const Icon(Icons.check_box, color: Colors.green), // Logo de la case à cocher
+            const Icon(Icons.check_box, color: Colors.green),
             const SizedBox(width: 8),
             Text('${card.idChecklists!.length} Checklists'),
           ],
         ),
       );
     } else if (card.idChecklists != null && card.idChecklists!.length == 1) {
-      // Si une seule checklist est présente
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
             const SizedBox(width: 16),
-            Icon(Icons.check_box, color: Colors.green), // Logo de la case à cocher
+            Icon(Icons.check_box, color: Colors.green),
             const SizedBox(width: 8),
-            Text('${card.checklists!.first.name} : ${card.checklists!.first.getItemsChecked()}/${card.checklists!.first.items.length}' ),
+            Text(
+                '${card.checklists!.first.name} : ${card.checklists!.first.getItemsChecked()}/${card.checklists!.first.items.length}'),
           ],
         ),
       );
     } else {
-      // Si aucune checklist n'est présente
       return const SizedBox.shrink();
     }
   }
 
-  Widget _buildMemberAvatars(List<Member>? members) {
-    if (members == null || members.isEmpty) {
-      return const SizedBox.shrink();
-    }
-    return Row(
-      children: members.map((member) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage("${member.avatarUrl}/60.png"),
-            radius: 16,
+Widget _buildMemberAvatars(List<Member>? members, Cover? cover, List<Label>? labels) {
+  Color? bannerColor;
+  if (cover != null && cover.size != 'full' && cover.color != null) {
+    bannerColor = getColor(cover.color!);
+  }
+
+  return Container(
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: bannerColor ?? Colors.transparent,
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(10),
+        bottomRight: Radius.circular(10),
+      ),
+    ),
+    padding: const EdgeInsets.all(8.0),
+    child: Row(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                if (labels != null && labels.isNotEmpty)
+                  ...labels.map((label) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                      margin: const EdgeInsets.only(right: 4.0),
+                      decoration: BoxDecoration(
+                        color: getColor(label.color) ?? Colors.transparent,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Text(
+                        label.name,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  }).toList(),
+              ],
+            ),
           ),
-        );
-      }).toList(),
-    );
+        ),
+        if (members != null && members.isNotEmpty)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              for (var member in members)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage("${member.avatarUrl}/60.png"),
+                    radius: 16,
+                  ),
+                ),
+            ],
+          ),
+      ],
+    ),
+  );
+}
+
+  material.Color? getColor(String s) {
+    switch (s) {
+      case 'green':
+        return Colors.green;
+      case 'yellow':
+        return Colors.yellow;
+      case 'orange':
+        return Colors.orange;
+      case 'red':
+        return Colors.red;
+      case 'purple':
+        return Colors.purple;
+      case 'blue':
+        return Colors.blue;
+      case 'sky':
+        return Colors.lightBlue;
+      case 'lime':
+        return Colors.lime;
+      case 'pink':
+        return Colors.pink;
+      case 'black':
+        return Colors.grey;
+      default:
+        return null;
+    }
   }
 }

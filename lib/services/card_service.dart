@@ -10,7 +10,6 @@ Future<List<ShortCard>> getCards(String id) async {
 
   for (var card in response.data) {
     cards.add(ShortCard.fromJson(card));
-    print('aaaa $card');
   }
   await fillMembers(cards);
   await fillChecklists(cards);
