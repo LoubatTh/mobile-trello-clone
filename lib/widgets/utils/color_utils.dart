@@ -22,7 +22,7 @@ material.Color? getColor(String s) {
       case 'pink':
         return Colors.pink;
       case 'black':
-        return Colors.grey;
+        return Colors.black;
       default:
         return null;
     }
