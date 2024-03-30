@@ -78,10 +78,15 @@ class MockApiService extends _i1.Mock implements _i3.ApiService {
       );
 
   @override
-  _i4.Future<_i2.Response<dynamic>> get(String? path) => (super.noSuchMethod(
+  _i4.Future<_i2.Response<dynamic>> get(
+    String? path, {
+    Map<String, dynamic>? data,
+  }) =>
+      (super.noSuchMethod(
         Invocation.method(
           #get,
           [path],
+          {#data: data},
         ),
         returnValue:
             _i4.Future<_i2.Response<dynamic>>.value(_FakeResponse_1<dynamic>(
@@ -89,6 +94,7 @@ class MockApiService extends _i1.Mock implements _i3.ApiService {
           Invocation.method(
             #get,
             [path],
+            {#data: data},
           ),
         )),
       ) as _i4.Future<_i2.Response<dynamic>>);
@@ -96,7 +102,7 @@ class MockApiService extends _i1.Mock implements _i3.ApiService {
   @override
   _i4.Future<_i2.Response<dynamic>> post(
     String? path, {
-    dynamic data,
+    Map<String, dynamic>? data,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -118,7 +124,7 @@ class MockApiService extends _i1.Mock implements _i3.ApiService {
   @override
   _i4.Future<_i2.Response<dynamic>> put(
     String? path, {
-    dynamic data,
+    Map<String, dynamic>? data,
   }) =>
       (super.noSuchMethod(
         Invocation.method(

@@ -1,19 +1,39 @@
+import 'package:app/models/board_model.dart';
+import 'package:app/pages/board_page.dart';
 import 'package:app/services/board_service.dart';
 import 'package:app/widgets/board/delete_board_button.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class BoardList extends StatelessWidget {
-  const BoardList({super.key});
+class BoardList extends StatefulWidget {
+  final BoardService boardService;
+
+  const BoardList({super.key, required this.boardService});
+
+  @override
+  State<BoardList> createState() => _BoardListState();
+}
+
+class _BoardListState extends State<BoardList> {
+  late Future<List<ShortBoardModel>> boards;
+
+  @override
+  void initState() {
+    super.initState();
+    boards = getAllBoards(widget.boardService);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final boards = getAllBoards();
-
     return FutureBuilder(
         future: boards,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const SizedBox(
+              width: 60,
+              height: 60,
+              child: Center(child: CircularProgressIndicator()),
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -24,9 +44,23 @@ class BoardList extends StatelessWidget {
                   leading: const Icon(Icons.space_dashboard_rounded, size: 20),
                   title: Text(snapshot.data[index].name,
                       style: const TextStyle(fontSize: 14)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BoardPage(
+                          boardId: snapshot.data[index].id,
+                          boardName: snapshot.data[index].name,
+                          boardService: widget.boardService,
+                        ),
+                      ),
+                    );
+                  },
                   trailing: DeleteBoardButton(
-                      key: const Key('deleteBoardButton'),
-                      boardId: snapshot.data[index].id),
+                    key: const Key('deleteBoardButton'),
+                    boardId: snapshot.data[index].id,
+                    boardService: widget.boardService,
+                  ),
                   dense: true,
                   visualDensity: VisualDensity.compact,
                 );
@@ -34,5 +68,21 @@ class BoardList extends StatelessWidget {
             );
           }
         });
+  }
+
+  Future<List<ShortBoardModel>> getAllBoards(BoardService boardService) async {
+    try {
+      final board = boardService.getAllBoards();
+      if (kDebugMode) {
+        print('Board: $board');
+      }
+
+      return await boardService.getAllBoards();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error: $e');
+      }
+      return [];
+    }
   }
 }

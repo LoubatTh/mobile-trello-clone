@@ -1,19 +1,22 @@
-class ShortBoard {
-  String id;
+class ShortBoardModel {
+  String? id;
   String name;
   String? idOrganization;
+  String? desc;
 
-  ShortBoard({
-    required this.id,
+  ShortBoardModel({
+    this.id,
     required this.name,
-    required this.idOrganization,
+    this.idOrganization,
+    this.desc,
   });
 
-  factory ShortBoard.fromJson(Map<String, dynamic> json) {
-    return ShortBoard(
+  factory ShortBoardModel.fromJson(Map<String, dynamic> json) {
+    return ShortBoardModel(
       id: json['id'],
       name: json['name'],
       idOrganization: json['idOrganization'],
+      desc: json['desc'],
     );
   }
 
@@ -22,11 +25,12 @@ class ShortBoard {
       'id': id,
       'name': name,
       'idOrganization': idOrganization,
+      'desc': desc != null ? '' : desc,
     };
   }
 }
 
-class Board {
+class BoardModel {
   String id;
   String name;
   String desc;
@@ -54,7 +58,7 @@ class Board {
   String templateGallery;
   bool enterpriseOwned;
 
-  Board({
+  BoardModel({
     required this.id,
     required this.name,
     required this.desc,
@@ -83,8 +87,8 @@ class Board {
     required this.enterpriseOwned,
   });
 
-  factory Board.fromJson(Map<String, dynamic> json) {
-    return Board(
+  factory BoardModel.fromJson(Map<String, dynamic> json) {
+    return BoardModel(
       id: json['id'],
       name: json['name'],
       desc: json['desc'],
