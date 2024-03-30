@@ -46,11 +46,11 @@ Future<void> fillChecklists(List<ShortCard> cards) async {
   }
 }
 
-Future<Card> getCard(String id) async {
-  Response response = await ApiService().get('/cards/$id');
+// Future<Card> getCard(String id) async {
+//   Response response = await ApiService().get('/cards/$id');
 
-  return Card.fromJson(response.data);
-}
+//   return Card.fromJson(response.data);
+// }
 
 // Future<void> createCard(String name, String idList) async {
 //   await ApiService().post('/cards', {'name': name, 'idList': idList});
