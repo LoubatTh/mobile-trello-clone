@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   late Future<List<WorkspaceModel>> organizationsFuture;
-  late Future<List<ShortBoard>> boardsFuture;
+  late Future<List<ShortBoardModel>> boardsFuture;
   final WorkspaceService workspaceService = WorkspaceService();
   final BoardService boardService = BoardService();
   bool isFABOpen = false;
@@ -29,7 +29,7 @@ class HomePageState extends State<HomePage> {
 
   void loadWorkspacesAndBoards() {
     organizationsFuture = workspaceService.getMemberOrganizations();
-    boardsFuture = boardService.getMemberBoards();
+    boardsFuture = boardService.getAllBoards();
   }
 
   @override
@@ -52,7 +52,7 @@ class HomePageState extends State<HomePage> {
         } else if (workspaceSnapshot.hasError) {
           return Text('Error: ${workspaceSnapshot.error}');
         } else if (workspaceSnapshot.hasData) {
-          return FutureBuilder<List<ShortBoard>>(
+          return FutureBuilder<List<ShortBoardModel>>(
             future: boardsFuture,
             builder: (context, boardsSnapshot) {
               if (!boardsSnapshot.hasData) {
@@ -62,7 +62,7 @@ class HomePageState extends State<HomePage> {
               Set<String> displayedBoardIds = {};
               List<Widget> workspaceWidgets =
                   workspaceSnapshot.data!.map((workspace) {
-                List<ShortBoard> workspaceBoards =
+                List<ShortBoardModel> workspaceBoards =
                     boardsSnapshot.data!.where((board) {
                   return board.idOrganization == workspace.id &&
                       displayedBoardIds.add(board.id!);
@@ -79,7 +79,7 @@ class HomePageState extends State<HomePage> {
                 );
               }).toList();
 
-              List<ShortBoard> guestWorkspaceBoards = boardsSnapshot.data!
+              List<ShortBoardModel> guestWorkspaceBoards = boardsSnapshot.data!
                   .where((board) => !displayedBoardIds.contains(board.id))
                   .toList();
               if (guestWorkspaceBoards.isNotEmpty) {

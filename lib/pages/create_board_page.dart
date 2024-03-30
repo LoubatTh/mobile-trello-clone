@@ -60,7 +60,7 @@ class CreateBoardPageState extends State<CreateBoardPage> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       
-      NewBoard newBoard = NewBoard(
+      NewBoardModel newBoard = NewBoardModel(
         name: boardName,
         idOrganization: selectedWorkspaceId!,
       );
@@ -104,7 +104,7 @@ class CreateBoardPageState extends State<CreateBoardPage> {
       }
 
       try {
-        await boardService.createBoard(newBoard);
+        await boardService.createBoard(newBoard.name, idOrganization: newBoard.idOrganization);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Board created successfully')),
         );

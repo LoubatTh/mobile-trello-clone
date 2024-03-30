@@ -22,12 +22,10 @@ class ApiService {
         'token': token,
       },
     ));
-
-    print(dio);
   }
 
   Future<Response> get(String path,
-      [Map<String, dynamic>? queryParameters]) async {
+      [Map<String, dynamic>? data]) async {
     await dbHelper.printDatabase();
     try {
       isParam(data) ? data = {} : data;

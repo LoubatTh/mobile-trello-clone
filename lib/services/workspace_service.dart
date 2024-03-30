@@ -26,7 +26,7 @@ class WorkspaceService {
   Future<String> createOrganization(WorkspaceModel workspaceModel) async {
     try {
       Map<String, dynamic> postData = workspaceModel.toJson();
-      var response = await apiService.post("/organizations", postData);
+      var response = await apiService.post("/organizations", data :postData);
       return response.data['id'];
     } catch (e) {
       rethrow;
@@ -59,7 +59,7 @@ class WorkspaceService {
   Future<dynamic> addOrganizationMember(String id, String idMember, String type) async {
     try {
       var response = await apiService.put(
-          "/organizations/$id/members/$idMember", { "type" : type });
+          "/organizations/$id/members/$idMember", data : { "type" : type });
       return response.data;
     } catch (e) {
       rethrow;
@@ -70,7 +70,7 @@ class WorkspaceService {
   Future<String> updateOrganization(
       String id, Map<String, dynamic> updateData) async {
     try {
-      var response = await apiService.put("/organizations/$id", updateData);
+      var response = await apiService.put("/organizations/$id", data : updateData);
       return response.data['id'];
     } catch (e) {
       rethrow;
@@ -101,7 +101,7 @@ class WorkspaceService {
       String id, Map<String, dynamic> updateData) async {
     try {
       var response =
-          await apiService.put("/organizations/$id/members", updateData);
+          await apiService.put("/organizations/$id/members", data : updateData);
       return response.data;
     } catch (e) {
       rethrow;

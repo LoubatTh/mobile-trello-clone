@@ -8,11 +8,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/.env");
   runApp(const MyApp());
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
   const MyApp({super.key});
 
   @override
@@ -36,7 +34,7 @@ class MyApp extends StatelessWidget {
 class MyLoginPage extends StatelessWidget {
   final TextEditingController _textController = TextEditingController();
 
-  MyLoginPage({Key? key}) : super(key: key);
+  MyLoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +177,6 @@ class MyLoginPage extends StatelessWidget {
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text('OK'),
-                                child: const Text('OK'),
                               ),
                             ],
                           );
@@ -190,7 +187,6 @@ class MyLoginPage extends StatelessWidget {
                         // ignore: use_build_context_synchronously
                         // ignore: use_build_context_synchronously
                         context,
-                        MaterialPageRoute(builder: (context) => const HomePage()),
                         MaterialPageRoute(builder: (context) => const HomePage()),
                       );
                     }
@@ -221,10 +217,7 @@ Future<void> _launchInWebView() async {
   final apiurl = dotenv.env['API_URL'];
   final apikey = dotenv.env['API_KEY'];
   final url = Uri.parse(
-  final url = Uri.parse(
       '$apiurl/authorize?expiration=never&scope=read,write,account&response_type=token&key=$apikey');
-  if (!await launchUrl(url, mode: LaunchMode.inAppBrowserView)) {
-    throw Exception('Could not launch $url');
   if (!await launchUrl(url, mode: LaunchMode.inAppBrowserView)) {
     throw Exception('Could not launch $url');
   }
