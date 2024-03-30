@@ -26,7 +26,12 @@ class CardList extends StatelessWidget {
             child: Column(
               children: [
                 for (var card in cardList)
-                  buildClickableCardWidget(context, card),
+                  Column(
+                    children: [
+                      buildClickableCardWidget(context, card),
+                      const SizedBox(height: 8.0),
+                    ],
+                  )
               ],
             ),
           );
@@ -51,7 +56,13 @@ class CardList extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           child: Container(
             color: bannerColor ?? Colors.transparent,
-            child: buildCardContent(card),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (card.cover != null) 
+                  buildCardContent(card),
+              ],
+            ),
           ),
         ),
       );
@@ -76,6 +87,7 @@ class CardList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _buildTopCard(card.members, card.cover, card.labels),
         ListTile(
           leading: const Icon(Icons.space_dashboard_rounded, size: 20),
           title: Text(card.name, style: const TextStyle(fontSize: 14)),
@@ -86,11 +98,12 @@ class CardList extends StatelessWidget {
             child: Text(card.desc),
           ),
         _buildChecklistInfo(card),
-        _buildMemberAvatars(card.members, card.cover, card.labels),
+        _buildAvatarMembers(card.members),
+        const SizedBox(height: 8.0),
       ],
     );
   }
-  
+
   Widget _buildChecklistInfo(ShortCard card) {
     if (card.idChecklists != null && card.idChecklists!.length > 1) {
       return Padding(
@@ -122,72 +135,79 @@ class CardList extends StatelessWidget {
     }
   }
 
-  Widget _buildMemberAvatars(List<Member>? members, Cover? cover, List<Label>? labels) {
-    Color? bannerColor;
-    if (cover != null && cover.size != 'full' && cover.color != null) {
-      bannerColor = getColor(cover.color!);
-    }
+Widget _buildTopCard(
+  List<Member>? members, Cover? cover, List<Label>? labels) {
+  Color? bannerColor;
 
-    const double labelsContainerWidth = 250.0; 
+  bool fullCover = cover?.size == 'full';
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: bannerColor ?? Colors.transparent,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(10),
-          bottomRight: Radius.circular(10),
-        ),
-      ),
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: labelsContainerWidth,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  if (labels != null && labels.isNotEmpty)
-                    for (var label in labels)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                        margin: const EdgeInsets.only(right: 4.0),
-                        decoration: BoxDecoration(
-                          color: getColor(label.color) ?? Colors.transparent,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Text(
-                          label.name,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8.0), 
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  if (members != null && members.isNotEmpty)
-                    for (var member in members)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage("${member.avatarUrl}/60.png"),
-                          radius: 16.0,
-                        ),
-                      ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  if (!fullCover && cover?.color != null) {
+    bannerColor = getColor(cover!.color!);
   }
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (!fullCover && cover != null)
+        Container(
+          width: double.infinity,
+          height: 45,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: bannerColor ?? Colors.transparent,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+          ),
+        ),
+      if (!fullCover && cover != null)
+        const SizedBox(height: 8.0),
+      if (!fullCover && cover != null)
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              if (labels != null && labels.isNotEmpty)
+                for (var label in labels)
+                  Container(
+                    width: 40.0,
+                    height: 20.0,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                      vertical: 4.0,
+                    ),
+                    margin: const EdgeInsets.only(right: 4.0),
+                    decoration: BoxDecoration(
+                      color: getColor(label.color) ?? Colors.transparent,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+            ],
+          ),
+        ),
+      if (!fullCover && cover != null) const SizedBox(height: 8.0),
+    ],
+  );
 }
+
+Widget _buildAvatarMembers(List<Member>? members) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: [
+        if (members != null && members.isNotEmpty)
+          for (var member in members)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage("${member.avatarUrl}/60.png"),
+                radius: 16.0,
+              ),
+            ),
+      ],
+    ),
+  );
+}
+}
+
