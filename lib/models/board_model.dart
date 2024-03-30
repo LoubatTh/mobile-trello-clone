@@ -1,12 +1,11 @@
-class ShortBoard {
+class ShortBoardModel {
   String? id;
   String name;
   String? desc;
   String? idMemberCreator;
   String? idOrganization;
-  String? desc;
 
-  ShortBoard({
+  ShortBoardModel({
     this.id,
     required this.name,
     this.desc,
@@ -21,7 +20,6 @@ class ShortBoard {
       desc: json['desc'],
       idMemberCreator: json['idMemberCreator'],
       idOrganization: json['idOrganization'],
-      desc: json['desc'],
     );
   }
 
@@ -34,13 +32,13 @@ class ShortBoard {
   }
 }
 
-class NewBoard {
+class NewBoardModel {
   String name;
   String idOrganization;
   String? desc;
   String? idBoardSource;
 
-  NewBoard({
+  NewBoardModel({
     required this.name,
     required this.idOrganization,
     this.desc,
@@ -63,36 +61,7 @@ class NewBoard {
   }
 }
 
-class NewBoard {
-  String name;
-  String idOrganization;
-  String? desc;
-  String? idBoardSource;
-
-  NewBoard({
-    required this.name,
-    required this.idOrganization,
-    this.desc,
-    this.idBoardSource,
-  });
-
-  Map<String, dynamic> toJson() {
-    if (idBoardSource == null && desc == null) {
-      return {
-        'name': name,
-        'idOrganization': idOrganization,
-      };
-    }
-    return {
-      'name': name,
-      'idOrganization': idOrganization,
-      'desc': desc,
-      'idBoardSource': idBoardSource,
-    };
-  }
-}
-
-class Board {
+class BoardModel {
   String id;
   String name;
   String desc;

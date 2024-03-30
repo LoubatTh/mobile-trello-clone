@@ -15,18 +15,17 @@ class BoardList extends StatefulWidget {
 }
 
 class _BoardListState extends State<BoardList> {
-  late Future<List<ShortBoardModel>> boards;
+  late Future<List<ShortBoardModel>> boardsFuture;
 
   @override
   void initState() {
     super.initState();
-    boards = getAllBoards(widget.boardService);
+    boardsFuture = getAllBoards(widget.boardService);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: boardsFuture,
         future: boardsFuture,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
