@@ -2,11 +2,18 @@ import 'package:app/services/board_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class UpdateBoardButton extends StatelessWidget {
+class UpdateBoardButton extends StatefulWidget {
   final String boardId;
+  final BoardService boardService;
 
-  const UpdateBoardButton({super.key, required this.boardId});
+  const UpdateBoardButton(
+      {super.key, required this.boardId, required this.boardService});
 
+  @override
+  State<UpdateBoardButton> createState() => _UpdateBoardButtonState();
+}
+
+class _UpdateBoardButtonState extends State<UpdateBoardButton> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController textController = TextEditingController();
@@ -33,7 +40,8 @@ class UpdateBoardButton extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            updateBoard(boardId, textController.text);
+                            updateBoard(widget.boardService, widget.boardId,
+                                textController.text);
                             Navigator.of(context).pop();
                           },
                           child: const Text('Create'),
@@ -45,9 +53,9 @@ class UpdateBoardButton extends StatelessWidget {
         icon: const Icon(Icons.edit, color: Colors.white70, size: 20));
   }
 
-  Future<void> updateBoard(String id, String name) async {
+  Future<void> updateBoard(
+      BoardService boardService, String id, String name) async {
     try {
-      final BoardService boardService = BoardService();
       boardService.renameBoard(id, name);
     } catch (e) {
       if (kDebugMode) {

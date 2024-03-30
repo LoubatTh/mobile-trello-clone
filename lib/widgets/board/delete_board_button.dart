@@ -34,7 +34,8 @@ class _DeleteBoardButtonState extends State<DeleteBoardButton> {
                       TextButton(
                         onPressed: () => {
                           deleteBoard(widget.boardService, widget.boardId),
-                          Navigator.of(context).pop()
+                          Navigator.of(context).pop(),
+                          Navigator.of(context).pop(),
                         },
                         child: const Text('Delete'),
                       ),

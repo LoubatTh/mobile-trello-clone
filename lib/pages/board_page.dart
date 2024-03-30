@@ -39,7 +39,8 @@ class _BoardPageState extends State<BoardPage> {
         appBar: AppBar(
           title: Text(widget.boardName),
           actions: [
-            UpdateBoardButton(boardId: widget.boardId),
+            UpdateBoardButton(
+                boardId: widget.boardId, boardService: widget.boardService),
             DeleteBoardButton(
                 boardId: widget.boardId, boardService: widget.boardService)
           ],
@@ -72,6 +73,7 @@ class _BoardPageState extends State<BoardPage> {
                         child: CardListWidget(
                           listId: snapshot.data[index].id,
                           listName: snapshot.data[index].name,
+                          listService: listService,
                         ),
                       );
                     },

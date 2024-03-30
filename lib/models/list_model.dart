@@ -12,7 +12,6 @@ class ListModel {
     required this.name,
     this.closed,
     required this.pos,
-    this.softLimit,
     this.idBoard,
   });
 
