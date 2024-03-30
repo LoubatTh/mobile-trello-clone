@@ -13,10 +13,18 @@ Future<List<ShortCard>> getCards(String id) async {
   }
   await fillMembers(cards);
   await fillChecklists(cards);
+  await setListnameCard(cards);
 
   return cards;
 }
 
+
+Future<void> setListnameCard(List<ShortCard> cards) async {
+  for (var card in cards) {
+    Response response = await ApiService().get('/cards/${card.id}/list');
+    card.setListName(response.data['name']);
+  }
+}
 Future<void> fillMembers(List<ShortCard> cards) async {
   for (var card in cards) {
     if (card.idMembers != null && card.idMembers!.isNotEmpty) {
@@ -27,7 +35,6 @@ Future<void> fillMembers(List<ShortCard> cards) async {
     }
   }
 }
-
 
 Future<void> fillChecklists(List<ShortCard> cards) async {
   for (var card in cards) {
