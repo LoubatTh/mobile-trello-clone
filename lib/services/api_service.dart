@@ -24,8 +24,7 @@ class ApiService {
     ));
   }
 
-  Future<Response> get(String path,
-      [Map<String, dynamic>? data]) async {
+  Future<Response> get(String path, [Map<String, dynamic>? data]) async {
     await dbHelper.printDatabase();
     try {
       isParam(data) ? data = {} : data;
