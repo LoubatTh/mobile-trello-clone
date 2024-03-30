@@ -1,3 +1,4 @@
+import 'package:app/services/board_service.dart';
 import 'package:app/services/list_service.dart';
 import 'package:app/models/list_model.dart';
 import 'package:app/widgets/board/delete_board_button.dart';
@@ -7,8 +8,13 @@ import 'package:flutter/material.dart';
 
 class BoardPage extends StatefulWidget {
   final String boardId, boardName;
+  final BoardService boardService;
 
-  const BoardPage({super.key, required this.boardId, required this.boardName});
+  const BoardPage(
+      {super.key,
+      required this.boardId,
+      required this.boardName,
+      required this.boardService});
 
   @override
   State<BoardPage> createState() => _BoardPageState();
@@ -34,7 +40,8 @@ class _BoardPageState extends State<BoardPage> {
           title: Text(widget.boardName),
           actions: [
             UpdateBoardButton(boardId: widget.boardId),
-            DeleteBoardButton(boardId: widget.boardId)
+            DeleteBoardButton(
+                boardId: widget.boardId, boardService: widget.boardService)
           ],
           // TODO: Add a button to manage (update, delete) the board
         ),
@@ -77,7 +84,9 @@ class _BoardPageState extends State<BoardPage> {
               // color: Colors.white10,
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               width: MediaQuery.of(context).size.width * 0.8,
-              child: const CreateListButton(),
+              child: CreateListButton(
+                boardId: widget.boardId,
+              ),
             )
           ],
         ));
@@ -85,12 +94,18 @@ class _BoardPageState extends State<BoardPage> {
 }
 
 class CreateListButton extends StatelessWidget {
+  final String boardId;
+
   const CreateListButton({
     super.key,
+    required this.boardId,
   });
 
   @override
   Widget build(BuildContext context) {
+    ListService listService = ListService();
+    final TextEditingController textController = TextEditingController();
+
     return TextButton(
       style: TextButton.styleFrom(
         textStyle: const TextStyle(color: Colors.white70),
@@ -102,8 +117,10 @@ class CreateListButton extends StatelessWidget {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Create a new list'),
-                content: const TextField(
-                  decoration: InputDecoration(hintText: 'Enter the list name'),
+                content: TextField(
+                  controller: textController,
+                  decoration:
+                      const InputDecoration(hintText: 'Enter the list name'),
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -114,7 +131,8 @@ class CreateListButton extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // createCard(textController.text);
+                      listService.createBoardList(
+                          boardId, textController.text, "top");
                       Navigator.of(context).pop();
                     },
                     child: const Text('Create'),

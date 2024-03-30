@@ -2,9 +2,19 @@ import 'package:app/services/board_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class CreateBoardButton extends StatelessWidget {
-  const CreateBoardButton({super.key});
+class CreateBoardButton extends StatefulWidget {
+  final BoardService boardService;
 
+  const CreateBoardButton({
+    super.key,
+    required this.boardService,
+  });
+
+  @override
+  CreateBoardButtonState createState() => CreateBoardButtonState();
+}
+
+class CreateBoardButtonState extends State<CreateBoardButton> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController textController = TextEditingController();
@@ -32,7 +42,7 @@ class CreateBoardButton extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            createBoard(textController.text);
+                            createBoard(widget.boardService, textController.text);
                             Navigator.of(context).pop();
                           },
                           child: const Text('Create'),
@@ -44,10 +54,10 @@ class CreateBoardButton extends StatelessWidget {
         child: const Icon(Icons.add, color: Colors.white70, size: 30));
   }
 
-  Future<void> createBoard(String name) async {
+  Future<void> createBoard(BoardService boardService, String name) async {
     try {
-      final BoardService boardService = BoardService();
       boardService.createBoard(name);
+      print('Board created');
     } catch (e) {
       if (kDebugMode) {
         print('Error: $e');
@@ -55,4 +65,3 @@ class CreateBoardButton extends StatelessWidget {
     }
   }
 }
-

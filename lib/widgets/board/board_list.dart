@@ -6,7 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BoardList extends StatefulWidget {
-  const BoardList({super.key});
+  final BoardService boardService;
+
+  const BoardList({super.key, required this.boardService});
 
   @override
   State<BoardList> createState() => _BoardListState();
@@ -18,7 +20,7 @@ class _BoardListState extends State<BoardList> {
   @override
   void initState() {
     super.initState();
-    boards = getAllBoards();
+    boards = getAllBoards(widget.boardService);
   }
 
   @override
@@ -49,13 +51,16 @@ class _BoardListState extends State<BoardList> {
                         builder: (context) => BoardPage(
                           boardId: snapshot.data[index].id,
                           boardName: snapshot.data[index].name,
+                          boardService: widget.boardService,
                         ),
                       ),
                     );
                   },
                   trailing: DeleteBoardButton(
-                      key: const Key('deleteBoardButton'),
-                      boardId: snapshot.data[index].id),
+                    key: const Key('deleteBoardButton'),
+                    boardId: snapshot.data[index].id,
+                    boardService: widget.boardService,
+                  ),
                   dense: true,
                   visualDensity: VisualDensity.compact,
                 );
@@ -65,10 +70,8 @@ class _BoardListState extends State<BoardList> {
         });
   }
 
-  Future<List<ShortBoardModel>> getAllBoards() async {
+  Future<List<ShortBoardModel>> getAllBoards(BoardService boardService) async {
     try {
-      final BoardService boardService = BoardService();
-
       final board = boardService.getAllBoards();
       if (kDebugMode) {
         print('Board: $board');

@@ -22,6 +22,8 @@ class ApiService {
         'token': token,
       },
     ));
+
+    print(dio);
   }
 
   Future<Response> get(String path, {Map<String, dynamic>? data}) async {
