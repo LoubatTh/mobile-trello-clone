@@ -1,20 +1,25 @@
-class ShortBoardModel {
+class ShortBoard {
   String? id;
   String name;
+  String? desc;
+  String? idMemberCreator;
   String? idOrganization;
   String? desc;
 
-  ShortBoardModel({
+  ShortBoard({
     this.id,
     required this.name,
-    this.idOrganization,
     this.desc,
+    this.idMemberCreator,
+    this.idOrganization,
   });
 
   factory ShortBoardModel.fromJson(Map<String, dynamic> json) {
     return ShortBoardModel(
       id: json['id'],
       name: json['name'],
+      desc: json['desc'],
+      idMemberCreator: json['idMemberCreator'],
       idOrganization: json['idOrganization'],
       desc: json['desc'],
     );
@@ -22,7 +27,6 @@ class ShortBoardModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'idOrganization': idOrganization,
       'desc': desc != null ? '' : desc,
@@ -30,7 +34,65 @@ class ShortBoardModel {
   }
 }
 
-class BoardModel {
+class NewBoard {
+  String name;
+  String idOrganization;
+  String? desc;
+  String? idBoardSource;
+
+  NewBoard({
+    required this.name,
+    required this.idOrganization,
+    this.desc,
+    this.idBoardSource,
+  });
+
+  Map<String, dynamic> toJson() {
+    if (idBoardSource == null && desc == null) {
+      return {
+        'name': name,
+        'idOrganization': idOrganization,
+      };
+    }
+    return {
+      'name': name,
+      'idOrganization': idOrganization,
+      'desc': desc,
+      'idBoardSource': idBoardSource,
+    };
+  }
+}
+
+class NewBoard {
+  String name;
+  String idOrganization;
+  String? desc;
+  String? idBoardSource;
+
+  NewBoard({
+    required this.name,
+    required this.idOrganization,
+    this.desc,
+    this.idBoardSource,
+  });
+
+  Map<String, dynamic> toJson() {
+    if (idBoardSource == null && desc == null) {
+      return {
+        'name': name,
+        'idOrganization': idOrganization,
+      };
+    }
+    return {
+      'name': name,
+      'idOrganization': idOrganization,
+      'desc': desc,
+      'idBoardSource': idBoardSource,
+    };
+  }
+}
+
+class Board {
   String id;
   String name;
   String desc;

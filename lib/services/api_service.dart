@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:app/services/user_helper.dart';
 
 class ApiService {
-  late Dio dio;
+  Dio dio = Dio();
   final dbHelper = DatabaseHelper.instance;
   String? apiUrl = dotenv.env['API_URL'];
 
@@ -26,7 +26,8 @@ class ApiService {
     print(dio);
   }
 
-  Future<Response> get(String path, {Map<String, dynamic>? data}) async {
+  Future<Response> get(String path,
+      [Map<String, dynamic>? queryParameters]) async {
     await dbHelper.printDatabase();
     try {
       isParam(data) ? data = {} : data;
