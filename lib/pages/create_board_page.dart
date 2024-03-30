@@ -22,14 +22,14 @@ class CreateBoardPageState extends State<CreateBoardPage> {
   String? boardDescription;
   List<WorkspaceModel> workspaces = [];
   bool isLoading = true;
-  final projectManagement = '5c4efa1d25a9692173830e7f';
-  final weeklyPlanning = '5ec98d97f98409568dd89dff';
-  final employeeHandbook = '5994bf29195fa87fb9f27709';
-  final kanban = '5e6005043fbdb55d9781821e';
-  final weeklyMeeting = '5b78b8c106c63923ffe26520';
-  final goToMarket = '5aaafd432693e874ec11495c';
-  final agileBoard = '591ca6422428d5f5b2794aee';
-  final companyVision = '5994be8ce20c9b37589141c2';
+  static const projectManagement = '5c4efa1d25a9692173830e7f';
+  static const weeklyPlanning = '5ec98d97f98409568dd89dff';
+  static const employeeHandbook = '5994bf29195fa87fb9f27709';
+  static const kanban = '5e6005043fbdb55d9781821e';
+  static const weeklyMeeting = '5b78b8c106c63923ffe26520';
+  static const goToMarket = '5aaafd432693e874ec11495c';
+  static const agileBoard = '591ca6422428d5f5b2794aee';
+  static const companyVision = '5994be8ce20c9b37589141c2';
 
   @override
   void initState() {
@@ -59,41 +59,14 @@ class CreateBoardPageState extends State<CreateBoardPage> {
   Future<void> createBoard() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      
+
       NewBoardModel newBoard = NewBoardModel(
         name: boardName,
         idOrganization: selectedWorkspaceId!,
       );
 
       String? idBoardSource;
-      switch (selectedTemplateId) {
-        case 'projectManagement':
-          idBoardSource = projectManagement;
-          break;
-        case 'weeklyMeeting':
-          idBoardSource = weeklyMeeting;
-          break;
-        case 'agileBoard':
-          idBoardSource = agileBoard;
-          break;
-        case 'companyVision':
-          idBoardSource = companyVision;
-          break;
-        case 'kanban':
-          idBoardSource = kanban;
-          break;
-        case 'weeklyPlanning':
-          idBoardSource = weeklyPlanning;
-          break;
-        case 'employeeHandbook':
-          idBoardSource = employeeHandbook;
-          break;
-        case 'goToMarket':
-          idBoardSource = goToMarket;
-          break;
-        default:
-          idBoardSource = null;
-      }
+      idBoardSource = selectedTemplateId;
 
       if (idBoardSource != null) {
         newBoard.idBoardSource = idBoardSource;
@@ -104,7 +77,7 @@ class CreateBoardPageState extends State<CreateBoardPage> {
       }
 
       try {
-        await boardService.createBoard(newBoard.name, idOrganization: newBoard.idOrganization);
+        await boardService.createBoard(newBoard);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Board created successfully')),
         );
@@ -184,27 +157,27 @@ class CreateBoardPageState extends State<CreateBoardPage> {
                                 DropdownMenuItem<String?>(
                                     value: null, child: Text('No Template')),
                                 DropdownMenuItem<String?>(
-                                    value: 'projectManagement',
+                                    value: projectManagement,
                                     child: Text('Project Management')),
                                 DropdownMenuItem<String?>(
-                                    value: 'weeklyMeeting',
+                                    value: weeklyMeeting,
                                     child: Text('Weekly Meeting')),
                                 DropdownMenuItem<String?>(
-                                    value: 'agileBoard',
+                                    value: agileBoard,
                                     child: Text('Agile Board')),
                                 DropdownMenuItem<String?>(
-                                    value: 'companyVision',
+                                    value: companyVision,
                                     child: Text('Company Vision')),
                                 DropdownMenuItem<String?>(
-                                    value: 'kanban', child: Text('Kanban')),
+                                    value: kanban, child: Text('Kanban')),
                                 DropdownMenuItem<String?>(
-                                    value: 'weeklyPlanning',
+                                    value: weeklyPlanning,
                                     child: Text('Weekly Planning')),
                                 DropdownMenuItem<String?>(
-                                    value: 'employeeHandbook',
+                                    value: employeeHandbook,
                                     child: Text('Employee Handbook')),
                                 DropdownMenuItem<String?>(
-                                    value: 'goToMarket',
+                                    value: goToMarket,
                                     child: Text('Go To Market')),
                               ],
                             ),

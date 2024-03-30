@@ -29,7 +29,7 @@ class HomePageState extends State<HomePage> {
 
   void loadWorkspacesAndBoards() {
     organizationsFuture = workspaceService.getMemberOrganizations();
-    boardsFuture = boardService.getAllBoards();
+    boardsFuture = boardService.getMemberBoards();
   }
 
   @override
