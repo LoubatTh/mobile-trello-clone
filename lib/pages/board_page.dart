@@ -43,7 +43,6 @@ class _BoardPageState extends State<BoardPage> {
             DeleteBoardButton(
                 boardId: widget.boardId, boardService: widget.boardService)
           ],
-          // TODO: Add a button to manage (update, delete) the board
         ),
         body: Column(
           children: [

@@ -1,3 +1,4 @@
+import 'package:app/pages/board_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/create_board_page.dart';
 import 'package:app/models/board_model.dart';
@@ -74,8 +75,16 @@ class HomePageState extends State<HomePage> {
                     ...workspaceBoards.map((board) => ListTile(
                           leading: const Icon(Icons.dashboard),
                           title: Text(board.name),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BoardPage(
+                                        boardId: board.id!,
+                                        boardName: board.name,
+                                        boardService: boardService,
+                                      )),
                         )),
-                  ],
+                )],
                 );
               }).toList();
 
@@ -89,8 +98,16 @@ class HomePageState extends State<HomePage> {
                     ...guestWorkspaceBoards.map((board) => ListTile(
                           leading: const Icon(Icons.dashboard),
                           title: Text(board.name),
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BoardPage(
+                                        boardId: board.id!,
+                                        boardName: board.name,
+                                        boardService: boardService,
+                                      ))
                         )),
-                  ],
+                )],
                 ));
               }
 

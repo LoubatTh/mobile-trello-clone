@@ -8,9 +8,6 @@ class ChecklistsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController checklistNameController = TextEditingController();
-    TextEditingController itemNameController = TextEditingController();
-
     bool isChecklistEmpty = card.checklists == null || card.checklists!.isEmpty;
 
     return Scaffold(
@@ -50,10 +47,10 @@ class ChecklistsPage extends StatelessWidget {
                         children: [
                           Expanded(
                             child: TextFormField(
-                              controller: checklistNameController..text = checklist.name,
+                              initialValue: checklist.name,
                               onChanged: (value) {
-                                card.checklists![card.checklists!.indexWhere(
-                                    (element) => element.id == checklist.id)].name = value;
+                                // Mettre à jour le nom de la checklist dans card.checklists
+                                checklist.name = value;
                               },
                             ),
                           ),
@@ -73,26 +70,16 @@ class ChecklistsPage extends StatelessWidget {
                           Checkbox(
                             value: item.state == 'complete',
                             onChanged: (value) {
-                              card.checklists![card.checklists!.indexWhere(
-                                  (element) => element.id == checklist.id)]
-                                  .items[card.checklists![card.checklists!.indexWhere(
-                                  (element) => element.id == checklist.id)]
-                                  .items
-                                  .indexWhere((element) => element.id == item.id)]
-                                  .state = value! ? 'complete' : 'incomplete';
+                              // Mettre à jour l'état de l'item dans card.checklists
+                              item.state = value! ? 'complete' : 'incomplete';
                             },
                           ),
                           Expanded(
                             child: TextFormField(
-                              controller: itemNameController..text = item.name,
+                              initialValue: item.name, // Utilise initialValue pour afficher le nom de l'item
                               onChanged: (value) {
-                                card.checklists![card.checklists!.indexWhere(
-                                    (element) => element.id == checklist.id)]
-                                    .items[card.checklists![card.checklists!.indexWhere(
-                                    (element) => element.id == checklist.id)]
-                                    .items
-                                    .indexWhere((element) => element.id == item.id)]
-                                    .name = value;
+                                // Mettre à jour le nom de l'item dans card.checklists
+                                item.name = value;
                               },
                             ),
                           ),
@@ -105,15 +92,14 @@ class ChecklistsPage extends StatelessWidget {
                         ],
                       ),
                     const SizedBox(height: 16),
-                    if (checklist.items.isNotEmpty && checklist.items.last == checklist.items.last)
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Action à effectuer lors du clic sur le bouton "Ajouter un nouvel élément"
-                          },
-                          child: const Text('Add item...'),
-                        ),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Action à effectuer lors du clic sur le bouton "Ajouter un nouvel élément"
+                        },
+                        child: const Text('Add item...'),
                       ),
+                    ),
                   ],
                 ),
           ],
