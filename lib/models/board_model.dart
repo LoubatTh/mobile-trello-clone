@@ -1,27 +1,62 @@
 class ShortBoardModel {
   String? id;
   String name;
+  String? desc;
+  String? idMemberCreator;
   String? idOrganization;
 
   ShortBoardModel({
     this.id,
     required this.name,
+    this.desc,
+    this.idMemberCreator,
     this.idOrganization,
   });
 
-  factory ShortBoardModel.fromJson(ShortBoardModel json) {
+  factory ShortBoardModel.fromJson(Map<String, dynamic> json) {
     return ShortBoardModel(
-      id: json.id,
-      name: json.name,
-      idOrganization: json.idOrganization,
+      id: json['id'],
+      name: json['name'],
+      desc: json['desc'],
+      idMemberCreator: json['idMemberCreator'],
+      idOrganization: json['idOrganization'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'idOrganization': idOrganization,
+      'desc': desc != null ? '' : desc,
+    };
+  }
+}
+
+class NewBoardModel {
+  String name;
+  String idOrganization;
+  String? desc;
+  String? idBoardSource;
+
+  NewBoardModel({
+    required this.name,
+    required this.idOrganization,
+    this.desc,
+    this.idBoardSource,
+  });
+
+  Map<String, dynamic> toJson() {
+    if (idBoardSource == null && desc == null) {
+      return {
+        'name': name,
+        'idOrganization': idOrganization,
+      };
+    }
+    return {
+      'name': name,
+      'idOrganization': idOrganization,
+      'desc': desc,
+      'idBoardSource': idBoardSource,
     };
   }
 }

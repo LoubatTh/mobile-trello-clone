@@ -1,22 +1,25 @@
-class Member {
-  String id;
-  String avatarUrl;
-  String username;
+class MemberModel {
+  String? id;
+  String? avatarUrl;
+  String fullName;
+  String? username;
   List<dynamic>? idOrganizations;
   List<dynamic>? idBoards;
 
-  Member({
-    required this.id,
-    required this.avatarUrl,
-    required this.username,
-    required this.idOrganizations,
-    required this.idBoards,
+  MemberModel({
+    this.id,
+    this.avatarUrl,
+    required this.fullName,
+    this.username,
+    this.idOrganizations,
+    this.idBoards,
   });
 
-  factory Member.fromJson(Map<String, dynamic> json) {
-    return Member(
+  factory MemberModel.fromJson(Map<String, dynamic> json) {
+    return MemberModel(
       id: json['id'],
       avatarUrl: json['avatarUrl'],
+      fullName: json['fullName'],
       username: json['username'],
       idOrganizations: json['idOrganizations'],
       idBoards: json['idBoards'],
@@ -25,11 +28,7 @@ class Member {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'avatarUrl': avatarUrl,
-      'username': username,
-      'idOrganizations': idOrganizations,
-      'idBoards': idBoards,
+      'fullname': fullName,
     };
   }
 }

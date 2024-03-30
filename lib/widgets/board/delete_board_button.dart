@@ -2,11 +2,18 @@ import 'package:app/services/board_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class DeleteBoardButton extends StatelessWidget {
+class DeleteBoardButton extends StatefulWidget {
   final String boardId;
+  final BoardService boardService;
 
-  const DeleteBoardButton({super.key, required this.boardId});
+  const DeleteBoardButton(
+      {super.key, required this.boardId, required this.boardService});
 
+  @override
+  State<DeleteBoardButton> createState() => _DeleteBoardButtonState();
+}
+
+class _DeleteBoardButtonState extends State<DeleteBoardButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -25,8 +32,10 @@ class DeleteBoardButton extends StatelessWidget {
                         child: const Text('Cancel'),
                       ),
                       TextButton(
-                        onPressed: () =>
-                            {deleteBoard(boardId), Navigator.of(context).pop()},
+                        onPressed: () => {
+                          deleteBoard(widget.boardService, widget.boardId),
+                          Navigator.of(context).pop()
+                        },
                         child: const Text('Delete'),
                       ),
                     ],
@@ -36,10 +45,9 @@ class DeleteBoardButton extends StatelessWidget {
             },
         icon: const Icon(Icons.delete, color: Colors.white70, size: 20));
   }
-  
-  Future<void> deleteBoard(String id) async {
+
+  Future<void> deleteBoard(BoardService boardService, String id) async {
     try {
-      final BoardService boardService = BoardService();
       boardService.deleteBoard(id);
     } catch (e) {
       if (kDebugMode) {
@@ -48,4 +56,3 @@ class DeleteBoardButton extends StatelessWidget {
     }
   }
 }
-

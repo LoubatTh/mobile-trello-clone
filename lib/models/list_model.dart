@@ -12,7 +12,6 @@ class ListModel {
     required this.name,
     this.closed,
     required this.pos,
-    this.softLimit,
     this.idBoard,
   });
 
@@ -22,7 +21,6 @@ class ListModel {
       name: json['name'] as String,
       closed: json['closed'] as bool,
       pos: json['pos'],
-      softLimit: json['softLimit'] as String,
       idBoard: json['idBoard'] as String,
     );
   }

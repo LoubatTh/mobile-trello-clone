@@ -1,5 +1,8 @@
-import 'package:app/services/workspace_service.dart';
 import 'package:flutter/material.dart';
+import 'package:app/services/workspace_service.dart';
+
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 class WorkspaceOptionsPage extends StatefulWidget {
   final String workspaceId;
@@ -27,7 +30,7 @@ class WorkspaceOptionsPageState extends State<WorkspaceOptionsPage> {
 
   Future<bool> showConfirmationDialog(
       BuildContext context, String message) async {
-    return (await showDialog(
+    return (await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text("Confirmation"),
@@ -47,76 +50,69 @@ class WorkspaceOptionsPageState extends State<WorkspaceOptionsPage> {
         false;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Workspace Options'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            FutureBuilder<dynamic>(
-              future: membersFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError || snapshot.data == null) {
-                  return Text('Error: ${snapshot.error ?? "Unknown error"}');
-                }
+  void showAddMemberDialog(BuildContext context) {
+    TextEditingController emailOrUsernameController = TextEditingController();
 
-                var members = snapshot.data as List<dynamic>;
-                if (members.isEmpty) {
-                  return const Text('No members found');
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Invite New Member"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text("Invite a new guest with his Trello username or ID"),
+              TextField(
+                controller: emailOrUsernameController,
+                decoration: const InputDecoration(
+                  hintText: "Username or ID",
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+            TextButton(
+              child: const Text("Invite"),
+              onPressed: () async {
+                try {
+                  await widget.workspaceService.addOrganizationMember(
+                      widget.workspaceId,
+                      emailOrUsernameController.text,
+                      "normal");
+                  Navigator.of(dialogContext).pop();
+                  scaffoldMessengerKey.currentState?.showSnackBar(
+                    const SnackBar(
+                        content: Text('Member invited successfully!')),
+                  );
+                } catch (e) {
+                  Navigator.of(dialogContext).pop();
+                  scaffoldMessengerKey.currentState?.showSnackBar(
+                    SnackBar(content: Text('Failed to invite member: $e')),
+                  );
                 }
-
-                return Card(
-                  child: Column(
-                    children: members.map<Widget>((member) {
-                      var memberId = member['id'] as String?;
-                      var memberName = member['name'] as String?;
-                      return ListTile(
-                        title: Text(memberName ?? 'Unknown Member'),
-                        trailing: memberId != null &&
-                                memberId != widget.workspaceId
-                            ? IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () async {
-                                  final confirmation = await showConfirmationDialog(
-                                      context,
-                                      "Are you sure you want to delete this member?");
-                                  if (confirmation) {
-                                    await widget.workspaceService
-                                        .deleteOrganizationMember(
-                                            widget.workspaceId, memberId);
-                                    setState(() {
-                                      membersFuture = widget.workspaceService
-                                          .getOrganizationMembers(
-                                              widget.workspaceId);
-                                    });
-                                  }
-                                },
-                              )
-                            : null,
-                      );
-                    }).toList()
-                      ..add(
-                        Container(
-                          margin: const EdgeInsets.all(
-                              8.0), // Equivalent to Padding
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Navigate to add member page
-                            },
-                            child: const Text('Add Member'),
-                          ),
-                        ),
-                      ),
-                  ),
-                );
               },
             ),
-            ElevatedButton(
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Utilize the ScaffoldMessengerKey in the ScaffoldMessenger
+    return ScaffoldMessenger(
+      key: scaffoldMessengerKey,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Workspace Options'),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.delete),
               onPressed: () async {
                 final confirmation = await showConfirmationDialog(
                     context, "Are you sure you want to delete this workspace?");
@@ -128,15 +124,81 @@ class WorkspaceOptionsPageState extends State<WorkspaceOptionsPage> {
                     Navigator.pop(context, true);
                   } catch (e) {
                     if (!mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Error deleting workspace')),
+                    scaffoldMessengerKey.currentState?.showSnackBar(
+                      SnackBar(content: Text('Error deleting workspace: $e')),
                     );
                   }
                 }
               },
-              child: const Text('Delete Workspace'),
             ),
           ],
+        ),
+        body: SingleChildScrollView(
+          child: FutureBuilder<dynamic>(
+            future: membersFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError || snapshot.data == null) {
+                return Text('Error: ${snapshot.error ?? "Unknown error"}');
+              }
+
+              var members = snapshot.data as List<dynamic>;
+              if (members.isEmpty) {
+                return const Text('No members found');
+              }
+
+              return Card(
+                child: Column(
+                  children: members.map<Widget>((member) {
+                    var memberId = member['id'] as String?;
+                    var memberName = member['username'] as String?;
+                    return ListTile(
+                      title: Text(memberName ?? 'Unknown Member'),
+                      trailing: memberId != null &&
+                              memberId != widget.workspaceId
+                          ? IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () async {
+                                final confirmation = await showConfirmationDialog(
+                                    context,
+                                    "Are you sure you want to delete this member?");
+                                if (confirmation) {
+                                  try {
+                                    await widget.workspaceService
+                                        .deleteOrganizationMember(
+                                            widget.workspaceId, memberId);
+                                    if (!mounted) return;
+                                    setState(() {
+                                      membersFuture = widget.workspaceService
+                                          .getOrganizationMembers(
+                                              widget.workspaceId);
+                                    });
+                                  } catch (e) {
+                                    if (!mounted) return;
+                                    scaffoldMessengerKey.currentState
+                                        ?.showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Error deleting member: $e')),
+                                    );
+                                  }
+                                }
+                              },
+                            )
+                          : null,
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showAddMemberDialog(context);
+          },
+          child: const Icon(Icons.add),
         ),
       ),
     );
