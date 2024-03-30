@@ -3,7 +3,11 @@ class ShortCard {
   String name;
   String desc;
   String idList;
+  String? listname;
   String idBoard;
+  DateTime? startDate;
+  DateTime? endDate;
+  bool dueComplete;
   List<String>? idMembers = [];
   List<Member>? members = [];
   List<String>? idChecklists = [];
@@ -17,7 +21,11 @@ class ShortCard {
     required this.name,
     required this.desc,
     required this.idList,
+    this.listname,
     required this.idBoard,
+    this.startDate,
+    this.endDate,
+    required this.dueComplete,
     this.idMembers,
     this.members,
     this.idChecklists,
@@ -27,28 +35,32 @@ class ShortCard {
     this.cover, 
   });
 
-  factory ShortCard.fromJson(Map<String, dynamic> json) {
-    return ShortCard(
-      id: json['id'],
-      name: json['name'],
-      desc: json['desc'],
-      idList: json['idList'],
-      idBoard: json['idBoard'],
-      idMembers: List<String>.from(json['idMembers']),
-      members: json['members'] != null
-          ? List<Member>.from(json['members'].map((x) => Member.fromJson(x)))
-          : [],
-      idChecklists: List<String>.from(json['idChecklists']),
-      checklists: json['checklists'] != null
-          ? List<Checklist>.from(json['checklists'].map((x) => Checklist.fromJson(x)))
-          : [],
-      idLabels: List<String>.from(json['idLabels']),
-      labels: json['labels'] != null
-          ? List<Label>.from(json['labels'].map((x) => Label.fromJson(x)))
-          : [],
-      cover: json['cover'] != null ? Cover.fromJson(json['cover']) : null,
-        );
-  }
+factory ShortCard.fromJson(Map<String, dynamic> json) {
+  return ShortCard(
+    id: json['id'],
+    name: json['name'],
+    desc: json['desc'],
+    idList: json['idList'],
+    listname: json['listname'],
+    idBoard: json['idBoard'],
+    idMembers: List<String>.from(json['idMembers']),
+    members: json['members'] != null
+        ? List<Member>.from(json['members'].map((x) => Member.fromJson(x)))
+        : [],
+    idChecklists: List<String>.from(json['idChecklists']),
+    checklists: json['checklists'] != null
+        ? List<Checklist>.from(json['checklists'].map((x) => Checklist.fromJson(x)))
+        : [],
+    idLabels: List<String>.from(json['idLabels']),
+    labels: json['labels'] != null
+        ? List<Label>.from(json['labels'].map((x) => Label.fromJson(x)))
+        : [],
+    cover: json['cover'] != null ? Cover.fromJson(json['cover']) : null,
+    startDate: json['badges']['start'] != null ? DateTime.parse(json['badges']['start']) : null,
+    endDate: json['badges']['due'] != null ? DateTime.parse(json['badges']['due']) : null,
+    dueComplete: json['badges']['dueComplete'],
+  );
+}
 
   Map<String, dynamic> toJson() {
     return {
@@ -56,14 +68,18 @@ class ShortCard {
       'name': name,
       'desc': desc,
       'idList': idList,
+      'listname': listname,
       'idBoard': idBoard,
       'idMembers': idMembers,
       'members': members,
+      'startDate': startDate,
+      'endDate': endDate,
       'idChecklists': idChecklists,
       'checklists': checklists,
       'idLabels': idLabels,
       'labels': labels,
-      'cover': cover?.toJson(), 
+      'cover': cover?.toJson(),
+      'dueComplete': dueComplete,
     };
   }
 
@@ -85,6 +101,10 @@ class ShortCard {
     return {
       'checklists': checklists,
     };
+  }
+
+  void setListName(String name) {
+    listname = name;
   }
 }
 
