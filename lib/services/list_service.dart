@@ -29,17 +29,16 @@ class ListService {
         .post('/boards/$boardId/lists', data: {'name': name, 'pos': pos});
     return response.data['id'];
   }
-  
+
   Future<String> moveList(String id, var pos) async {
-    Response response =
-        await apiService.put('/lists/$id', data: {'pos': pos});
+    Response response = await apiService.put('/lists/$id', data: {'pos': pos});
     return response.data;
   }
 
   Future<String> renameList(String id, String name) async {
     Response response =
         await apiService.put('/lists/$id', data: {'name': name});
-    return response.data;
+    return response.data['id'];
   }
 
   Future<String> archiveList(String id, bool value) async {

@@ -73,6 +73,7 @@ class _BoardPageState extends State<BoardPage> {
                         child: CardListWidget(
                           listId: snapshot.data[index].id,
                           listName: snapshot.data[index].name,
+                          listService: listService,
                         ),
                       );
                     },
