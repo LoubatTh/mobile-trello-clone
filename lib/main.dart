@@ -6,6 +6,16 @@ void main() async {
   await dotenv.load(fileName: "assets/.env");
   runApp(
     MaterialApp(
+      title: 'TrellTech',
+      debugShowCheckedModeBanner: true,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.grey,
+          brightness: Brightness.dark,
+          backgroundColor: Colors.grey[900],
+        ),
+      ),
       home: MyLoginPage(),
     ),
   );

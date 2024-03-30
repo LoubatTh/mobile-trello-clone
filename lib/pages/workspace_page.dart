@@ -89,7 +89,11 @@ class _WorkspacePageState extends State<WorkspacePage> {
         future: organizationsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const SizedBox(
+              width: 60,
+              height: 60,
+              child: Center(child: CircularProgressIndicator()),
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {

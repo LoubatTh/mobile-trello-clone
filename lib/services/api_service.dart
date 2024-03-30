@@ -22,10 +22,11 @@ class ApiService {
         'token': token,
       },
     ));
+
+    print(dio);
   }
 
-  Future<Response> get(String path,
-      {Map<String, dynamic>? data}) async {
+  Future<Response> get(String path, {Map<String, dynamic>? data}) async {
     await dbHelper.printDatabase();
     try {
       isParam(data) ? data = {} : data;
@@ -36,8 +37,7 @@ class ApiService {
     }
   }
 
-  Future<Response> post(String path,
-      {Map<String, dynamic>? data}) async {
+  Future<Response> post(String path, {Map<String, dynamic>? data}) async {
     try {
       isParam(data) ? data = {} : data;
 
@@ -47,8 +47,7 @@ class ApiService {
     }
   }
 
-  Future<Response> put(String path,
-      {Map<String, dynamic>? data}) async {
+  Future<Response> put(String path, {Map<String, dynamic>? data}) async {
     try {
       isParam(data) ? data = {} : data;
 

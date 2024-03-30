@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
@@ -34,26 +32,26 @@ class DatabaseHelper {
   Future<void> fillDatabaseWithToken(String token) async {
     final db = await database;
     final url = '$apiurl/tokens/$token?key=$apikey&token=$token';
-    final url_member =
+    final urlMember =
         '$apiurl/members/me?key=$apikey&token=$token&fields=username';
 
     try {
       final response = await client.get(url);
-      final response_member = await client.get(url_member);
+      final responseMember = await client.get(urlMember);
 
-      if (response.statusCode == 200 && response_member.statusCode == 200) {
+      if (response.statusCode == 200 && responseMember.statusCode == 200) {
         await db.insert('user', {
           'userID': response.data['id'],
           'memberID': response.data['idMember'],
           'token': token,
-          'username': response_member.data['username'],
+          'username': responseMember.data['username'],
         });
         print("Informations ajoutées à la base de données");
         await printDatabase();
       } else {
         print('${response.statusCode} : ${response.data.toString()}');
         print(
-            '${response_member.statusCode} : ${response_member.data.toString()}');
+            '${responseMember.statusCode} : ${responseMember.data.toString()}');
       }
     } catch (error) {
       print("Erreur lors de la récupération des données: $error");

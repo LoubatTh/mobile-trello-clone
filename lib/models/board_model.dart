@@ -2,18 +2,21 @@ class ShortBoardModel {
   String? id;
   String name;
   String? idOrganization;
+  String? desc;
 
   ShortBoardModel({
     this.id,
     required this.name,
     this.idOrganization,
+    this.desc,
   });
 
-  factory ShortBoardModel.fromJson(ShortBoardModel json) {
+  factory ShortBoardModel.fromJson(Map<String, dynamic> json) {
     return ShortBoardModel(
-      id: json.id,
-      name: json.name,
-      idOrganization: json.idOrganization,
+      id: json['id'],
+      name: json['name'],
+      idOrganization: json['idOrganization'],
+      desc: json['desc'],
     );
   }
 
@@ -22,6 +25,7 @@ class ShortBoardModel {
       'id': id,
       'name': name,
       'idOrganization': idOrganization,
+      'desc': desc != null ? '' : desc,
     };
   }
 }
