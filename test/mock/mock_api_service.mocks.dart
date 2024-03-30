@@ -4,7 +4,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
+import 'dart:async' as _i5;
 
+import 'package:app/services/api_service.dart' as _i4;
+import 'package:app/services/user_helper.dart' as _i3;
 import 'package:app/services/api_service.dart' as _i4;
 import 'package:app/services/user_helper.dart' as _i3;
 import 'package:dio/dio.dart' as _i2;
@@ -46,6 +49,19 @@ class _FakeDatabaseHelper_1 extends _i1.SmartFake
 
 class _FakeResponse_2<T> extends _i1.SmartFake implements _i2.Response<T> {
   _FakeResponse_2(
+class _FakeDatabaseHelper_1 extends _i1.SmartFake
+    implements _i3.DatabaseHelper {
+  _FakeDatabaseHelper_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeResponse_2<T> extends _i1.SmartFake implements _i2.Response<T> {
+  _FakeResponse_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -57,6 +73,7 @@ class _FakeResponse_2<T> extends _i1.SmartFake implements _i2.Response<T> {
 /// A class which mocks [ApiService].
 ///
 /// See the documentation for Mockito's code generation for more information.
+class MockApiService extends _i1.Mock implements _i4.ApiService {
 class MockApiService extends _i1.Mock implements _i4.ApiService {
   MockApiService() {
     _i1.throwOnMissingStub(this);
@@ -90,6 +107,15 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
       ) as _i3.DatabaseHelper);
 
   @override
+  _i3.DatabaseHelper get dbHelper => (super.noSuchMethod(
+        Invocation.getter(#dbHelper),
+        returnValue: _FakeDatabaseHelper_1(
+          this,
+          Invocation.getter(#dbHelper),
+        ),
+      ) as _i3.DatabaseHelper);
+
+  @override
   set apiUrl(String? _apiUrl) => super.noSuchMethod(
         Invocation.setter(
           #apiUrl,
@@ -111,6 +137,7 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
         ),
         returnValue:
             _i5.Future<_i2.Response<dynamic>>.value(_FakeResponse_2<dynamic>(
+            _i5.Future<_i2.Response<dynamic>>.value(_FakeResponse_2<dynamic>(
           this,
           Invocation.method(
             #get,
@@ -118,6 +145,7 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
             {#data: data},
           ),
         )),
+      ) as _i5.Future<_i2.Response<dynamic>>);
       ) as _i5.Future<_i2.Response<dynamic>>);
 
   @override
@@ -132,8 +160,13 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
             path,
             queryParameters,
           ],
+          [
+            path,
+            queryParameters,
+          ],
         ),
         returnValue:
+            _i5.Future<_i2.Response<dynamic>>.value(_FakeResponse_2<dynamic>(
             _i5.Future<_i2.Response<dynamic>>.value(_FakeResponse_2<dynamic>(
           this,
           Invocation.method(
@@ -142,8 +175,13 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
               path,
               queryParameters,
             ],
+            [
+              path,
+              queryParameters,
+            ],
           ),
         )),
+      ) as _i5.Future<_i2.Response<dynamic>>);
       ) as _i5.Future<_i2.Response<dynamic>>);
 
   @override
@@ -158,8 +196,13 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
             path,
             queryParameters,
           ],
+          [
+            path,
+            queryParameters,
+          ],
         ),
         returnValue:
+            _i5.Future<_i2.Response<dynamic>>.value(_FakeResponse_2<dynamic>(
             _i5.Future<_i2.Response<dynamic>>.value(_FakeResponse_2<dynamic>(
           this,
           Invocation.method(
@@ -168,11 +211,17 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
               path,
               queryParameters,
             ],
+            [
+              path,
+              queryParameters,
+            ],
           ),
         )),
       ) as _i5.Future<_i2.Response<dynamic>>);
+      ) as _i5.Future<_i2.Response<dynamic>>);
 
   @override
+  _i5.Future<_i2.Response<dynamic>> delete(String? path) => (super.noSuchMethod(
   _i5.Future<_i2.Response<dynamic>> delete(String? path) => (super.noSuchMethod(
         Invocation.method(
           #delete,
@@ -180,11 +229,13 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
         ),
         returnValue:
             _i5.Future<_i2.Response<dynamic>>.value(_FakeResponse_2<dynamic>(
+            _i5.Future<_i2.Response<dynamic>>.value(_FakeResponse_2<dynamic>(
           this,
           Invocation.method(
             #delete,
             [path],
           ),
         )),
+      ) as _i5.Future<_i2.Response<dynamic>>);
       ) as _i5.Future<_i2.Response<dynamic>>);
 }

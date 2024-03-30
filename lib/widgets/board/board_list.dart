@@ -27,6 +27,7 @@ class _BoardListState extends State<BoardList> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: boardsFuture,
+        future: boardsFuture,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox(
