@@ -71,7 +71,7 @@ class _BoardPageState extends State<BoardPage> {
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: CardListWidget(
                           listId: snapshot.data[index].id,
-                          listName: snapshot.data[index].name,
+                          listName: snapshot.data[index].name, key: Key(snapshot.data[index].id),
                         ),
                       );
                     },
