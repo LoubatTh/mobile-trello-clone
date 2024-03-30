@@ -1,7 +1,6 @@
 import 'package:app/models/card_model.dart';
 import 'package:app/services/api_service.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 Future<List<ShortCard>> getCards(String id) async {
   Response response = await ApiService().get('/lists/$id/cards');
@@ -53,17 +52,17 @@ Future<Card> getCard(String id) async {
   return Card.fromJson(response.data);
 }
 
-Future<void> createCard(String name, String idList) async {
-  await ApiService().post('/cards', {'name': name, 'idList': idList});
+// Future<void> createCard(String name, String idList) async {
+//   await ApiService().post('/cards', {'name': name, 'idList': idList});
 
-  if (kDebugMode) {
-    print("createCard(): $name, $idList");
-  }
-}
+//   if (kDebugMode) {
+//     print("createCard(): $name, $idList");
+//   }
+// }
 
-Future<void> renameCard(String id, String name) async {
-  await ApiService().put('/cards/$id', {'name': name});
-}
+// Future<void> renameCard(String id, String name) async {
+//   await ApiService().put('/cards/$id', {'name': name});
+// }
 
 Future<void> deleteCard(String id) async {
   await ApiService().delete('/cards/$id');

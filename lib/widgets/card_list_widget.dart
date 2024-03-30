@@ -1,5 +1,5 @@
+import 'package:app/widgets/card/card_list.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class CardListWidget extends StatefulWidget {
   final String listId, listName;
@@ -12,16 +12,9 @@ class CardListWidget extends StatefulWidget {
 }
 
 class _CardListWidgetState extends State<CardListWidget> {
-  // CardService cardService = CardService();
-  // late Future<List<CardModel>> futureCards;
-
   @override
   void initState() {
     super.initState();
-    // futureCards = cardService.getAllListCards(widget.listId).then((value) {
-    //   value.sort((a, b) => a.pos.compareTo(b.pos));
-    //   return value;
-    // });
   }
 
   @override
@@ -30,27 +23,21 @@ class _CardListWidgetState extends State<CardListWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            widget.listName),
-        // FutureBuilder(
-        //     future: futureCards,
-        //     builder: (BuildContext context, AsyncSnapshot snapshot) {
-        //       if (snapshot.connectionState == ConnectionState.waiting) {
-        //         return const SizedBox(
-        //           width: 60,
-        //           height: 60,
-        //           child: Center(child: CircularProgressIndicator()),
-        //         );
-        //       } else if (snapshot.hasError) {
-        //         return Text('Error: ${snapshot.error}');
-        //       } else {
-        //         // TODO: return card list builder
-        //         return const Placeholder();
-        //       }
-        //     }),
-        const CreateCardButton(
-          key: Key('createCardButton'),
-        )
+          widget.listName,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                CardList(key: const Key("cardList"), listId: widget.listId),
+                const CreateCardButton(
+                  key: Key('createCardButton'),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
