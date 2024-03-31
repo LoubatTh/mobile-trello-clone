@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:app/services/board_service.dart';
 import 'package:app/services/list_service.dart';
 import 'package:app/models/list_model.dart';
 import 'package:app/widgets/board/delete_board_button.dart';
 import 'package:app/widgets/board/update_board_button.dart';
 import 'package:app/widgets/card_list_widget.dart';
-import 'package:flutter/material.dart';
 
 class BoardPage extends StatefulWidget {
   final String boardId, boardName;
@@ -27,68 +27,89 @@ class _BoardPageState extends State<BoardPage> {
   @override
   void initState() {
     super.initState();
-    futureLists = listService.getAllBoardLists(widget.boardId).then((value) {
-      value.sort((a, b) => a.pos.compareTo(b.pos));
-      return value;
-    });
+    futureLists = fetchLists();
+  }
+
+  Future<List<ListModel>> fetchLists() async {
+    final lists = await listService.getAllBoardLists(widget.boardId);
+    lists.sort((a, b) => a.pos.compareTo(b.pos));
+    return lists;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.boardName),
-          actions: [
-            UpdateBoardButton(boardId: widget.boardId),
-            DeleteBoardButton(
-                boardId: widget.boardId, boardService: widget.boardService)
-          ],
-        ),
-        body: Column(
-          children: [
-            Expanded(
-                child: FutureBuilder(
-              future: futureLists,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        color: Colors.white10,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: CardListWidget(
-                          listId: snapshot.data[index].id,
-                          listName: snapshot.data[index].name, key: Key(snapshot.data[index].id),
-                        ),
-                      );
-                    },
-                  );
-                }
+      appBar: AppBar(
+        title: Text(widget.boardName),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {
+                futureLists = fetchLists();
+              });
+            },
+          ),
+          UpdateBoardButton(boardId: widget.boardId),
+          DeleteBoardButton(
+              boardId: widget.boardId, boardService: widget.boardService)
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  futureLists = fetchLists();
+                });
               },
-            )),
-            Container(
-              // color: Colors.white10,
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: CreateListButton(
-                boardId: widget.boardId,
+              child: FutureBuilder(
+                future: futureLists,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          color: Colors.white10,
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: CardListWidget(
+                            listId: snapshot.data[index].id,
+                            listName: snapshot.data[index].name,
+                            key: Key(snapshot.data[index].id),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
               ),
-            )
-          ],
-        ));
+            ),
+          ),
+          Container(
+            margin:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: CreateListButton(
+              boardId: widget.boardId,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
