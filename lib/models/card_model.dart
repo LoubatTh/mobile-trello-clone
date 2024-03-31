@@ -289,3 +289,27 @@ class ShortMember{
     avatarUrl = url;
   }
 }
+
+class Lists {
+  String id;
+  String name;
+
+  Lists({
+    required this.id,
+    required this.name,
+  });
+
+  factory Lists.fromJson(Map<String, dynamic> json) {
+    return Lists(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+}

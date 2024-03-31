@@ -108,7 +108,23 @@ Future<void> updateMember(ShortCard card) async {
   }
 }
 
-  Future<void> deleteCard(String id) async {
-    await ApiService().delete('/cards/$id');
+  Future<List<Lists>> getLists(String cardId) async {
+    List<Lists> lists = [];
+
+    try{
+      Response response = await apiService.get('/boards/$cardId/lists');
+      for (var list in response.data) {
+        lists.add(Lists.fromJson(list));
+      }
+    } catch (e) {
+      print('Erreur lors de la récupération des listes : $e');
+    }
+
+    return lists;
   }
+
+  Future<void> deleteCard(String id) async {
+    await apiService.delete('/cards/$id');
+  }
+
 }

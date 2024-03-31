@@ -71,14 +71,21 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
             icon: const Icon(Icons.more_vert),
             itemBuilder: (context) => [
               const PopupMenuItem(
-                value: 1,
-                child: Text('Option 1'),
+                value: 'move',
+                child: Text('Move card'),
               ),
               const PopupMenuItem(
-                value: 2,
-                child: Text('Option 2'),
+                value: 'delete',
+                child: Text('Delete card'),
               ),
             ],
+            onSelected: (value) {
+              if (value == 'move') {
+                _showMoveCardDialog(widget.card);
+              } else if (value == 'delete') {
+                _showDeleteConfirmationDialog(widget.card.id);
+              }
+            },
           ),
         ],
       ),
@@ -286,11 +293,13 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
     );
   }
 
-  void _showMembersPopup(BuildContext context, ShortCard card, CardService cardService) {
+  void _showMembersPopup(
+      BuildContext context, ShortCard card, CardService cardService) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MembersPage(boardId: card.idBoard, card: card, cardService: cardService),
+        builder: (context) => MembersPage(
+            boardId: card.idBoard, card: card, cardService: cardService),
       ),
     );
   }
@@ -306,5 +315,84 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
       cardService.updateCard(
           widget.card.id, "desc", descriptionController.text);
     }
+  }
+
+  void _showMoveCardDialog(ShortCard card) async {
+    final List<Lists> listNames = await cardService.getLists(card.idBoard);
+    Lists? selectedList;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Move card'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return DropdownButton<Lists>(
+                hint: Text('Select a list'),
+                value: selectedList,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedList = newValue;
+                  });
+                },
+                items: listNames.map((Lists list) {
+                  return DropdownMenuItem<Lists>(
+                    value: list,
+                    child: Text(list.name),
+                  );
+                }).toList(),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (selectedList != null) {
+                  print("Card moved to ${selectedList!.id}");
+                  cardService.updateCard(card.id, "idList", selectedList!.id);
+                  Navigator.pop(context);
+                }
+              },
+              child: Text('Move'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmationDialog(String cardId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Delete card?'),
+          content: Text('Are you sure you want to delete this card?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                cardService.deleteCard(cardId);
+                Navigator.pop(context); 
+                Navigator.pop(context); 
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

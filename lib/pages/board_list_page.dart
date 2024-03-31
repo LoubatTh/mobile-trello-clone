@@ -38,4 +38,4 @@ class _BoardListPageState extends State<BoardListPage> {
           )),
     );
   }
-}
+}       
