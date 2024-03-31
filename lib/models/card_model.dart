@@ -138,12 +138,12 @@ class Label {
 class Cover {
   String? color;
   String size;
-  String brightness;
+  String? brightness;
 
   Cover({
     this.color,
     required this.size,
-    required this.brightness,
+    this.brightness,
   });
 
   factory Cover.fromJson(Map<String, dynamic> json) {

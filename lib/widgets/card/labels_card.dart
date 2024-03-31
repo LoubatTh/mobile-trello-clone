@@ -31,7 +31,6 @@ class _LabelsPageState extends State<LabelsPage> {
         labels = fetchedLabels;
       });
     } catch (e) {
-      // Gérer les erreurs d'appel API ici
       print('Erreur lors de la récupération des étiquettes : $e');
     }
   }
@@ -59,9 +58,7 @@ class _LabelsPageState extends State<LabelsPage> {
                     leading: Checkbox(
                       value: isChecked,
                       onChanged: (newValue) {
-                        // Vous pouvez ajouter ici la logique pour modifier l'état de la case
                         setState(() {
-                          // Mettez à jour card.idLabels en fonction du label.id et newValue
                           if (newValue ?? false) {
                             widget.card.idLabels!.add(label.id);
                           } else {

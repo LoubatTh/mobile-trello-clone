@@ -144,6 +144,26 @@ Future<void> updateMember(ShortCard card) async {
     }
   }
 
+  Future<void> updateCover(String cardId, String color, String size) async {
+    try {
+      await apiService.put('/cards/$cardId', data: {
+        'cover': {'color': color, 'size': size}
+      });
+      print("updateCover() called");
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> removeCover(String cardId) async {
+    try {
+      await apiService.put('/cards/$cardId', data: {'cover': ""});
+      print("removeCover() called");
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> deleteCard(String id) async {
     await apiService.delete('/cards/$id');
   }

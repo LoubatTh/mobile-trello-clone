@@ -7,6 +7,7 @@ import 'package:app/models/card_model.dart';
 import 'package:intl/intl.dart';
 import 'package:app/widgets/utils/date_utils.dart';
 import 'package:app/widgets/utils/popup_checklists_utils.dart';
+import 'package:app/widgets/card/background_card.dart';
 
 class CardDetailScreen extends StatefulWidget {
   final ShortCard card;
@@ -78,12 +79,23 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                 value: 'delete',
                 child: Text('Delete card'),
               ),
+              const PopupMenuItem(
+                value: 'background',
+                child: Text('Modify background'),
+              ),
             ],
             onSelected: (value) {
               if (value == 'move') {
                 _showMoveCardDialog(widget.card);
               } else if (value == 'delete') {
                 _showDeleteConfirmationDialog(widget.card.id);
+              } else if (value == 'background') {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return BackgroundPopup(shortCard: widget.card,);
+                  },
+                );
               }
             },
           ),
@@ -385,8 +397,8 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
             TextButton(
               onPressed: () {
                 cardService.deleteCard(cardId);
-                Navigator.pop(context); 
-                Navigator.pop(context); 
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
               child: Text('Delete'),
             ),
