@@ -67,6 +67,7 @@ class _LabelsPageState extends State<LabelsPage> {
                           } else {
                             widget.card.idLabels!.remove(label.id);
                           }
+                          cardService.updateLabels(widget.card.id, widget.card.idLabels!);
                         });
                       },
                     ),

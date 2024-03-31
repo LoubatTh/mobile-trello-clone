@@ -123,6 +123,27 @@ Future<void> updateMember(ShortCard card) async {
     return lists;
   }
 
+  Future<void> updateLabels(String cardId, List<String> data) async {
+    try {
+      await apiService.put('/cards/$cardId', data: {'idLabels': data});
+      print("updateLabels() called $data");
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> createCard(String name, String? description, String listId) async {
+    try {
+      await apiService.post('/cards', data: {
+        'name': name,
+        'description': description,
+        'idList': listId,
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> deleteCard(String id) async {
     await apiService.delete('/cards/$id');
   }
