@@ -2,7 +2,6 @@ import 'package:app/models/board_model.dart';
 import 'package:app/pages/board_page.dart';
 import 'package:app/services/board_service.dart';
 import 'package:app/widgets/board/delete_board_button.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BoardList extends StatefulWidget {
@@ -20,7 +19,6 @@ class _BoardListState extends State<BoardList> {
   @override
   void initState() {
     super.initState();
-    // boardsFuture = getAllBoards(widget.boardService);
   }
 
   @override
@@ -69,20 +67,4 @@ class _BoardListState extends State<BoardList> {
           }
         });
   }
-
-  // Future<List<ShortBoardModel>> getAllBoards(BoardService boardService) async {
-  //   try {
-  //     // final board = boardService.getAllBoards();
-  //     if (kDebugMode) {
-  //       print('Board: $board');
-  //     }
-
-  //     return await boardService.getAllBoards();
-  //   } catch (e) {
-  //     if (kDebugMode) {
-  //       print('Error: $e');
-  //     }
-  //     return [];
-  //   }
-  // }
-}
+}   
