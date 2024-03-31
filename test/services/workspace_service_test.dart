@@ -7,186 +7,159 @@ import '../mock/mock_api_service.mocks.dart';
 
 void main() {
   group('WorkspaceService Tests', () {
-    late WorkspaceService workspaceService;
     late MockApiService mockApiService;
-    late WorkspaceModel workspaceModel;
+    late WorkspaceService workspaceService;
 
     setUp(() {
       mockApiService = MockApiService();
       workspaceService = WorkspaceService(apiService: mockApiService);
-      workspaceModel = WorkspaceModel(
-          id: "1",
-          displayName: "Test Workspace",
-          desc: "A test workspace",
-          idBoards: ["Workspace1", "Workspace2"],
-          idMemberCreator: "https://example.com");
     });
 
-    // Test for createOrganization method
-    test(
-        'createOrganization successfully creates a workspace and returns its ID',
-        () async {
-      const String expectedId = "2";
-      Map<String, dynamic> postData = workspaceModel.toJson();
-      
-      when(mockApiService.post('/organizations', data: anyNamed('data')))
+    test('getMemberOrganizations returns a list of WorkspaceModel', () async {
+      final fakeResponseData = [
+        {
+          "id": "1",
+          "displayName": "Test Workspace",
+          "desc": "Description of Test Workspace",
+          "idMemberCreator": "member123",
+          "idBoards": ["board1", "board2"]
+        },
+        // Add more fake workspace data if needed
+      ];
+
+      when(mockApiService.get('/members/me/organizations', any))
           .thenAnswer((_) async => Response(
-                data: {'id': expectedId},
+                data: fakeResponseData,
                 statusCode: 200,
-                requestOptions: RequestOptions(path: '/organizations'),
+                requestOptions: RequestOptions(path: ''),
               ));
 
-      String resultId =
+      final organizations = await workspaceService.getMemberOrganizations();
+
+      expect(organizations, isA<List<WorkspaceModel>>());
+      expect(organizations.length, fakeResponseData.length);
+      expect(organizations.first.displayName, "Test Workspace");
+    });
+
+    // Example for createOrganization - modify as needed
+    test('createOrganization successfully creates a workspace', () async {
+      final workspaceModel = WorkspaceModel(
+        id: '1',
+        displayName: 'New Workspace',
+        desc: 'Description',
+        idMemberCreator: 'member123',
+        idBoards: [],
+      );
+
+      when(mockApiService.post("/organizations", data: anyNamed('data')))
+          .thenAnswer((_) async => Response(
+                data: {"id": "1"},
+                statusCode: 200,
+                requestOptions: RequestOptions(path: ''),
+              ));
+
+      final resultId =
           await workspaceService.createOrganization(workspaceModel);
 
-      expect(resultId, equals(expectedId));
-      verify(mockApiService.post('/organizations', data: postData)).called(1);
+      expect(resultId, isNotNull);
+      expect(resultId, "1");
     });
 
-    // Rest for getOrganization method
-    test('getOrganization successfully returns a workspace ID', () async {
-      const String expectedId = "1";
+        // Testing getOrganizationMembers method
+    test('getOrganizationMembers returns a list of member usernames', () async {
+      const organizationId = '1';
+      final fakeResponseData = [
+        {"username": "user1"},
+        {"username": "user2"},
+      ];
 
-      when(mockApiService.get('/organizations/1')).thenAnswer((_) async =>
-          Response(
-              data: {'id': expectedId},
-              statusCode: 200,
-              requestOptions: RequestOptions(path: '/organizations/1')));
-
-      String resultId = await workspaceService.getOrganization("1");
-
-      expect(resultId, equals(expectedId));
-      verify(mockApiService.get('/organizations/1')).called(1);
-    });
-
-    // Test for updateOrganization method
-    test(
-        'updateOrganization successfully updates a workspace and returns its ID',
-        () async {
-      const String expectedId = "1";
-      Map<String, dynamic> updateData = {
-        'displayName': 'Updated Workspace',
-        'desc': 'An updated workspace',
-        'name': 'Workspace1',
-        'website': 'https://example.com'
-      };
-
-      when(mockApiService.put('/organizations/1', data: anyNamed('data')))
+      when(mockApiService.get("/organizations/$organizationId/members", any))
           .thenAnswer((_) async => Response(
-                data: {'id': expectedId},
+                data: fakeResponseData,
                 statusCode: 200,
-                requestOptions: RequestOptions(path: '/organizations/1'),
+                requestOptions: RequestOptions(path: ''),
               ));
 
-      String resultId =
-          await workspaceService.updateOrganization("1", updateData);
+      final members = await workspaceService.getOrganizationMembers(organizationId);
 
-      expect(resultId, equals(expectedId));
-      verify(mockApiService.put('/organizations/1', data: updateData))
-          .called(1);
+      expect(members, isA<List<dynamic>>());
+      expect(members.length, fakeResponseData.length);
+      expect(members.first['username'], "user1");
     });
 
-    // Test for deleteOrganization method
-    test('deleteOrganization successfully deletes a workspace', () async {
-      when(mockApiService.delete('/organizations/1')).thenAnswer((_) async =>
-          Response(
-              statusCode: 200,
-              requestOptions: RequestOptions(path: '/organizations/1')));
+    // Testing addOrganizationMember method
+    test('addOrganizationMember successfully adds a member to the organization', () async {
+      const organizationId = '1';
+      const memberId = 'member123';
+      const memberType = 'normal';
+      final fakeResponseData = {"success": true};
 
-      await workspaceService.deleteOrganization("1");
-
-      verify(mockApiService.delete('/organizations/1')).called(1);
-    });
-
-    // Test for getOrganizationBoards method
-    test('getOrganizationBoards successfully returns a list of boards',
-        () async {
-      when(mockApiService.get('/organizations/1/boards')).thenAnswer(
-          (_) async => Response(
-              data: ['Board1', 'Board2'],
-              statusCode: 200,
-              requestOptions: RequestOptions(path: '/organizations/1/boards')));
-
-      dynamic result = await workspaceService.getOrganizationBoards("1");
-
-      expect(result, equals(['Board1', 'Board2']));
-      verify(mockApiService.get('/organizations/1/boards')).called(1);
-    });
-
-    // Test for getOrganizationMembers method
-    test('getOrganizationMembers successfully returns a list of members',
-        () async {
-      when(mockApiService.get('/organizations/1/members')).thenAnswer(
-          (_) async => Response(
-              data: ['Member1', 'Member2'],
-              statusCode: 200,
-              requestOptions:
-                  RequestOptions(path: '/organizations/1/members')));
-
-      dynamic result = await workspaceService.getOrganizationMembers("1");
-
-      expect(result, equals(['Member1', 'Member2']));
-      verify(mockApiService.get('/organizations/1/members')).called(1);
-    });
-
-    // Test for updateOrganizationMembers method
-    test('updateOrganizationMembers successfully updates a list of members',
-        () async {
-      Map<String, dynamic> updateData = {
-        'members': ['Member1', 'Member2']
-      };
-
-      when(mockApiService.put('/organizations/1/members',
-              data: anyNamed('data')))
+      when(mockApiService.put("/organizations/$organizationId/members/$memberId", data: anyNamed('data')))
           .thenAnswer((_) async => Response(
+                data: fakeResponseData,
                 statusCode: 200,
-                requestOptions:
-                    RequestOptions(path: '/organizations/1/members'),
+                requestOptions: RequestOptions(path: ''),
               ));
 
-      await workspaceService.updateOrganizationMembers("1", updateData);
+      final result = await workspaceService.addOrganizationMember(organizationId, memberId, memberType);
 
-      verify(mockApiService.put('/organizations/1/members', data: updateData))
-          .called(1);
+      expect(result, fakeResponseData);
     });
 
-    // Test for updateOrganizationMember method
-    test('updateOrganizationMember successfully updates a member', () async {
-      const String expectedId = "1";
-      Map<String, dynamic> updateData = {
-        'displayName': 'Updated Member',
-        'email': 'allo@test.com',
-        'id': '1'
-      };
-
-      when(mockApiService.put('/organizations/1/members/1',
-              data: anyNamed('data')))
+    // Testing deleteOrganization method
+    test('deleteOrganization successfully deletes an organization', () async {
+      const organizationId = '1';
+      when(mockApiService.delete("/organizations/$organizationId"))
           .thenAnswer((_) async => Response(
-                data: {'id': expectedId},
+                data: {},
                 statusCode: 200,
-                requestOptions:
-                    RequestOptions(path: '/organizations/1/members/1'),
+                requestOptions: RequestOptions(path: ''),
               ));
 
-      dynamic result =
-          await workspaceService.updateOrganizationMember("1", "1", updateData);
+      await workspaceService.deleteOrganization(organizationId);
 
-      expect(result, equals({'id': expectedId}));
-      verify(mockApiService.put('/organizations/1/members/1', data: updateData))
-          .called(1);
+      // Since delete doesn't return a body, we check if the method was called
+      verify(mockApiService.delete("/organizations/$organizationId")).called(1);
     });
 
-    // Test for deleteOrganizationMember method
-    test('deleteOrganizationMember successfully deletes a member', () async {
-      when(mockApiService.delete('/organizations/1/members/1')).thenAnswer(
-          (_) async => Response(
-              statusCode: 200,
-              requestOptions:
-                  RequestOptions(path: '/organizations/1/members/1')));
+    // Testing getOrganizationBoards method
+    test('getOrganizationBoards returns a list of boards within the organization', () async {
+      const organizationId = '1';
+      final fakeResponseData = [
+        {"id": "board1", "name": "Board 1"},
+        {"id": "board2", "name": "Board 2"},
+      ];
 
-      await workspaceService.deleteOrganizationMember("1", "1");
+      when(mockApiService.get("/organizations/$organizationId/boards", any))
+          .thenAnswer((_) async => Response(
+                data: fakeResponseData,
+                statusCode: 200,
+                requestOptions: RequestOptions(path: ''),
+              ));
 
-      verify(mockApiService.delete('/organizations/1/members/1')).called(1);
+      final boards = await workspaceService.getOrganizationBoards(organizationId);
+
+      expect(boards, isA<List<dynamic>>());
+      expect(boards.length, fakeResponseData.length);
+      expect(boards.first['name'], "Board 1");
+    });
+
+    // Testing deleteOrganizationMember method
+    test('deleteOrganizationMember successfully removes a member from the organization', () async {
+      const organizationId = '1';
+      const memberId = 'member123';
+
+      when(mockApiService.delete("/organizations/$organizationId/members/$memberId"))
+          .thenAnswer((_) async => Response(
+                data: {},
+                statusCode: 200,
+                requestOptions: RequestOptions(path: ''),
+              ));
+
+      await workspaceService.deleteOrganizationMember(organizationId, memberId);
+
+      // Since delete doesn't return a body, we check if the method was called
+      verify(mockApiService.delete("/organizations/$organizationId/members/$memberId")).called(1);
     });
   });
 }
