@@ -44,17 +44,6 @@ class WorkspaceService {
     }
   }
 
-  // GET /organizations/{id}
-  Future<WorkspaceModel> getOrganization(String id) async {
-    try {
-      var response = await apiService.get("/organizations/$id",
-          {'fields': 'displayName,desc,idMemberCreator,idBoards'});
-      return response.data;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   // Add a new member to the workspace
   Future<dynamic> addOrganizationMember(String id, String idMember, String type) async {
     try {
@@ -66,18 +55,7 @@ class WorkspaceService {
     }
   }
 
-  // PUT /organizations/{id}
-  Future<String> updateOrganization(
-      String id, Map<String, dynamic> updateData) async {
-    try {
-      var response = await apiService.put("/organizations/$id", data : updateData);
-      return response.data['id'];
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  // DELETE /organizations/{id}
+  // DELETE a organization
   Future<void> deleteOrganization(String id) async {
     try {
       await apiService.delete("/organizations/$id");
@@ -86,7 +64,7 @@ class WorkspaceService {
     }
   }
 
-  // GET /organizations/{id}/boards
+  // GET the boards of an organization
   Future<dynamic> getOrganizationBoards(String id) async {
     try {
       var response = await apiService.get("/organizations/$id/boards");
@@ -96,19 +74,7 @@ class WorkspaceService {
     }
   }
 
-  // PUT /organizations/{id}/members
-  Future<void> updateOrganizationMembers(
-      String id, Map<String, dynamic> updateData) async {
-    try {
-      var response =
-          await apiService.put("/organizations/$id/members", data : updateData);
-      return response.data;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  // DEL /organizations/{id}/members/{idMember}
+  // DELELTE a member from an organization
   Future<void> deleteOrganizationMember(String id, String idMember) async {
     try {
       await apiService.delete("/organizations/$id/members/$idMember");
