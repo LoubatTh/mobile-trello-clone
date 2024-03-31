@@ -93,7 +93,9 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return BackgroundPopup(shortCard: widget.card,);
+                    return BackgroundPopup(
+                      shortCard: widget.card,
+                    );
                   },
                 );
               }

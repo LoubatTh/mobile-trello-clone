@@ -91,6 +91,7 @@ class _BoardPageState extends State<BoardPage> {
                             listId: snapshot.data[index].id,
                             listName: snapshot.data[index].name,
                             listService: listService,
+                            key: Key(snapshot.data[index].id),
                           ),
                         );
                       },
