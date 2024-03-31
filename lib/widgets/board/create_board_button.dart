@@ -43,8 +43,8 @@ class CreateBoardButtonState extends State<CreateBoardButton> {
                         ),
                         TextButton(
                           onPressed: () {
-                            createBoard(widget.boardService, textController.text);
-                            boardservice.createBoard(textController.text);
+                            // createBoard(widget.boardService, textController.text);
+                            // boardservice.createBoard(textController.text);
                             Navigator.of(context).pop();
                           },
                           child: const Text('Create'),
@@ -56,14 +56,14 @@ class CreateBoardButtonState extends State<CreateBoardButton> {
         child: const Icon(Icons.add, color: Colors.white70, size: 30));
   }
 
-  Future<void> createBoard(BoardService boardService, String name) async {
-    try {
-      boardService.createBoard(name);
-      print('Board created');
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error: $e');
-      }
-    }
-  }
+  // Future<void> createBoard(BoardService boardService, String name) async {
+  //   try {
+  //     boardService.createBoard(name);
+  //     print('Board created');
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('Error: $e');
+  //     }
+  //   }
+  // }
 }

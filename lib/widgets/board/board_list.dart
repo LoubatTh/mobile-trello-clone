@@ -20,7 +20,7 @@ class _BoardListState extends State<BoardList> {
   @override
   void initState() {
     super.initState();
-    boardsFuture = getAllBoards(widget.boardService);
+    // boardsFuture = getAllBoards(widget.boardService);
   }
 
   @override
@@ -70,19 +70,19 @@ class _BoardListState extends State<BoardList> {
         });
   }
 
-  Future<List<ShortBoardModel>> getAllBoards(BoardService boardService) async {
-    try {
-      final board = boardService.getAllBoards();
-      if (kDebugMode) {
-        print('Board: $board');
-      }
+  // Future<List<ShortBoardModel>> getAllBoards(BoardService boardService) async {
+  //   try {
+  //     // final board = boardService.getAllBoards();
+  //     if (kDebugMode) {
+  //       print('Board: $board');
+  //     }
 
-      return await boardService.getAllBoards();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error: $e');
-      }
-      return [];
-    }
-  }
+  //     return await boardService.getAllBoards();
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('Error: $e');
+  //     }
+  //     return [];
+  //   }
+  // }
 }

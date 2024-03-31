@@ -1,4 +1,5 @@
 import 'package:app/models/card_model.dart';
+import 'package:app/services/card_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -14,7 +15,7 @@ String formatDatetimeOutput(DateTime datetime){
   return DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(datetime.toUtc());
 }
 
-Future<void> selectStartDate(BuildContext context, TextEditingController startDateController, ShortCard card) async {
+Future<void> selectStartDate(BuildContext context, TextEditingController startDateController, ShortCard card, CardService cardservice) async {
   DateTime initialDate = startDateController.text.isNotEmpty ? DateTime.parse(startDateController.text) : DateTime.now();
   final DateTime? pickedStartDate = await showDatePicker(
     context: context,
@@ -37,19 +38,17 @@ Future<void> selectStartDate(BuildContext context, TextEditingController startDa
       );
       startDateController.text = startDateTime.toString().substring(0, 16);
       final output = formatDatetimeOutput(startDateTime);
-      //update si la date change (callAPI)
       print("New Start Date: $output");
+      await cardservice.updateCard(card.id, "start", output);
     } else {
-      // L'utilisateur a annulé la sélection de l'heure
       print("Start Time selection cancelled");
     }
   } else {
-    // L'utilisateur a annulé la sélection de la date
     print("Start Date selection cancelled");
   }
 }
 
-Future<void> selectDueDate(BuildContext context, TextEditingController dueDateController, ShortCard card) async {
+Future<void> selectDueDate(BuildContext context, TextEditingController dueDateController, ShortCard card, CardService cardservice) async {
   DateTime initialDate = dueDateController.text.isNotEmpty ? DateTime.parse(dueDateController.text) : DateTime.now();
   final DateTime? pickedDueDate = await showDatePicker(
     context: context,
@@ -72,14 +71,12 @@ Future<void> selectDueDate(BuildContext context, TextEditingController dueDateCo
       );
       dueDateController.text = dueDateTime.toString().substring(0, 16);
       final output = formatDatetimeOutput(dueDateTime);
-      //update si la date change (callAPI)
       print("New Due Date: $output");
+      await cardservice.updateCard(card.id, "due", output);
     } else {
-      // L'utilisateur a annulé la sélection de l'heure
       print("Due Time selection cancelled");
     }
   } else {
-    // L'utilisateur a annulé la sélection de la date
     print("Due Date selection cancelled");
   }
 }

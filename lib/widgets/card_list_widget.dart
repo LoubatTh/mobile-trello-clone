@@ -29,7 +29,7 @@ class _CardListWidgetState extends State<CardListWidget> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.75, 
                   child: CardList(key: const Key("cardList"), listId: widget.listId),
                 ),

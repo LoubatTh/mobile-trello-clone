@@ -257,3 +257,35 @@ class Member {
     };
   }
 }
+
+class ShortMember{
+  String id;
+  String fullName;
+  String? avatarUrl;
+
+  ShortMember({
+    required this.id,
+    required this.fullName,
+    this.avatarUrl,
+  });
+
+  factory ShortMember.fromJson(Map<String, dynamic> json) {
+    return ShortMember(
+      id: json['id'],
+      fullName: json['fullName'],
+      avatarUrl: json['avatarUrl'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'avatarUrl': avatarUrl,
+    };
+  }
+
+  void setMemberAvatar(String url) {
+    avatarUrl = url;
+  }
+}

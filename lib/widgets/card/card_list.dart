@@ -13,7 +13,8 @@ class CardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Future<List<ShortCard>> cards = getCards(listId);
+    final CardService cardService = CardService();
+    final Future<List<ShortCard>> cards = cardService.getCards(listId);
 
     return FutureBuilder<List<ShortCard>>(
       future: cards,
