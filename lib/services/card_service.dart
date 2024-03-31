@@ -96,22 +96,22 @@ class CardService {
     }
   }
 
-Future<void> updateMember(ShortCard card) async {
-  try {
-    List<String>? idMembers = card.idMembers ; 
+  Future<void> updateMember(ShortCard card) async {
+    try {
+      List<String>? idMembers = card.idMembers;
 
-    await apiService.put('/cards/${card.id}', data: {'idMembers': idMembers});
+      await apiService.put('/cards/${card.id}', data: {'idMembers': idMembers});
 
-    print("updateCard() called");
-  } catch (e) {
-    rethrow;
+      print("updateCard() called");
+    } catch (e) {
+      rethrow;
+    }
   }
-}
 
   Future<List<Lists>> getLists(String cardId) async {
     List<Lists> lists = [];
 
-    try{
+    try {
       Response response = await apiService.get('/boards/$cardId/lists');
       for (var list in response.data) {
         lists.add(Lists.fromJson(list));
@@ -132,7 +132,8 @@ Future<void> updateMember(ShortCard card) async {
     }
   }
 
-  Future<void> createCard(String name, String? description, String listId) async {
+  Future<void> createCard(
+      String name, String? description, String listId) async {
     try {
       await apiService.post('/cards', data: {
         'name': name,
@@ -168,4 +169,44 @@ Future<void> updateMember(ShortCard card) async {
     await apiService.delete('/cards/$id');
   }
 
+  Future<String> createChecklist(String cardId, String name) async {
+    try {
+      Response response =
+          await apiService.post('/cards/$cardId/checklists', data: {
+        'name': name,
+      });
+      return response.data['id'];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> addItemChecklist(String idchecklist, String value) async {
+    try {
+      apiService.post('/checklists/$idchecklist/checkItems', data: {
+        'name': value,
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Checklist>> getChecklists(String cardId) async {
+    Response response = await apiService.get('/cards/$cardId/checklists');
+
+    final checklists = <Checklist>[];
+
+    for (var checklist in response.data) {
+      checklists.add(Checklist.fromJson(checklist));
+    }
+
+    return checklists;
+  }
+
+  Future<void> checkedItems(String checklistId, String name, String state) async {
+    await apiService.post('/checklists/$checklistId/checkItems', data: {
+      'name': name,
+      'checked': state,
+    });
+  }
 }

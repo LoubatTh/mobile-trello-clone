@@ -252,7 +252,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                   const SizedBox(height: 12),
                   GestureDetector(
                     onTap: () {
-                      showChecklistsPage(context, widget.card);
+                      showChecklistsPage(context, widget.card, cardService);
                     },
                     child: Container(
                       width: double.infinity,
