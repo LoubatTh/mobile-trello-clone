@@ -138,12 +138,12 @@ class Label {
 class Cover {
   String? color;
   String size;
-  String brightness;
+  String? brightness;
 
   Cover({
     this.color,
     required this.size,
-    required this.brightness,
+    this.brightness,
   });
 
   factory Cover.fromJson(Map<String, dynamic> json) {
@@ -258,61 +258,51 @@ class Member {
   }
 }
 
-class Card {
+class ShortMember{
   String id;
-  String name;
-  String idList;
-  String idBoard;
-  String desc;
-  String? due;
-  String? dueComplete;
-  String? url;
-  String? shortUrl;
-  String? idAttachmentCover;
-  List<String>? idMembers;
-  List<String>? idLabels;
-  // List<dynamic>? idChecklists;
-  // List<dynamic>? idMembersVoted;
-  // List<dynamic>? idShort;
-  // List<dynamic>? attachments;
+  String fullName;
+  String? avatarUrl;
 
-  Card({
+  ShortMember({
     required this.id,
-    required this.name,
-    required this.idList,
-    required this.idBoard,
-    required this.desc,
-    required this.due,
-    required this.dueComplete,
-    required this.url,
-    required this.shortUrl,
-    required this.idAttachmentCover,
-    required this.idMembers,
-    required this.idLabels,
-    // required this.idChecklists,
-    // required this.idMembersVoted,
-    // required this.idShort,
-    // required this.attachments,
+    required this.fullName,
+    this.avatarUrl,
   });
 
-  factory Card.fromJson(Map<String, dynamic> json) {
-    return Card(
+  factory ShortMember.fromJson(Map<String, dynamic> json) {
+    return ShortMember(
+      id: json['id'],
+      fullName: json['fullName'],
+      avatarUrl: json['avatarUrl'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'avatarUrl': avatarUrl,
+    };
+  }
+
+  void setMemberAvatar(String url) {
+    avatarUrl = url;
+  }
+}
+
+class Lists {
+  String id;
+  String name;
+
+  Lists({
+    required this.id,
+    required this.name,
+  });
+
+  factory Lists.fromJson(Map<String, dynamic> json) {
+    return Lists(
       id: json['id'],
       name: json['name'],
-      idList: json['idList'],
-      idBoard: json['idBoard'],
-      desc: json['desc'],
-      due: json['due'],
-      dueComplete: json['dueComplete'],
-      url: json['url'],
-      shortUrl: json['shortUrl'],
-      idAttachmentCover: json['idAttachmentCover'],
-      idMembers: List<String>.from(json['idMembers']),
-      idLabels: List<String>.from(json['idLabels']),
-      // idChecklists: List<dynamic>.from(json['idChecklists']),
-      // idMembersVoted: List<dynamic>.from(json['idMembersVoted']),
-      // idShort: List<dynamic>.from(json['idShort']),
-      // attachments: List<dynamic>.from(json['attachments']),
     );
   }
 
@@ -320,20 +310,6 @@ class Card {
     return {
       'id': id,
       'name': name,
-      'idList': idList,
-      'idBoard': idBoard,
-      'desc': desc,
-      'due': due,
-      'dueComplete': dueComplete,
-      'url': url,
-      'shortUrl': shortUrl,
-      'idAttachmentCover': idAttachmentCover,
-      'idMembers': idMembers,
-      'idLabels': idLabels,
-      // 'idChecklists': idChecklists,
-      // 'idMembersVoted': idMembersVoted,
-      // 'idShort': idShort,
-      // 'attachments': attachments,
     };
   }
 }
