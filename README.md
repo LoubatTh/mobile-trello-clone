@@ -10,6 +10,21 @@
 
 ## Installation
 
+prerequisites:
+
+- [Install Flutter](https://docs.flutter.dev/get-started/install)
+
+```bash
+git clone git@github.com:EpitechMscProPromo2026/T-DEV-600-TLS_2.git &&
+flutter pub get
+```
+
+Start the application
+
+```bash
+flutter run
+```
+
 ## Tests
 
 Run tests \(_You don't have to build everytime you are running tests_\):
