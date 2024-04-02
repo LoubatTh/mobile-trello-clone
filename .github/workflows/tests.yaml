@@ -4,8 +4,6 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies
-        run: apt-get update && apt-get install -y sqlite3 libsqlite3-dev
       - uses: actions/checkout@v2
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
