@@ -1,6 +1,5 @@
 import 'package:app/services/board_service.dart';
 import 'package:app/widgets/app_bar.dart';
-import 'package:app/widgets/board/create_board_button.dart';
 import 'package:app/widgets/board/board_list.dart';
 import 'package:flutter/material.dart';
 
@@ -30,10 +29,6 @@ class _BoardListPageState extends State<BoardListPage> {
                   boardService: boardService,
                 ),
               ),
-              CreateBoardButton(
-                key: const Key('createBoardButton'),
-                boardService: boardService,
-              )
             ],
           )),
     );
